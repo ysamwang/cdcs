@@ -1,0 +1,115 @@
+\documentclass{article}
+\usepackage[margin = .6 in]{geometry}
+
+\begin{document}
+
+\section{Edgeweights of 50, 40, 30}
+<<>>=
+B <- matrix(0, 3, 3)
+B[2, 1] <- 50; B[3, 1] <- 40; B[3, 2] <- 30
+
+sim.size <- 1000
+n <- 500
+p <- 3
+
+
+inner.rec1 <- matrix(0, sim.size, 8)
+colnames(inner.rec1) <- c(paste("Inc", c("dhisc", "t_test", "el_single", "el_both")),
+                          paste("Cor", c("dhisc", "t_test", "el_single", "el_both")))
+for(i in 1:sim.size){
+errs <- matrix(runif(n * p, -1, 1), n, p)
+  Y <- solve(diag(3) - B,  t(errs))
+  Y <- t(Y)
+  
+  
+  ### Null is wrong ###
+  res1on2 <- lm(Y[,1] ~Y[, 2])$res
+  inner.rec1[i, 1] <- dHSIC::dhsic.test(Y[, 2], res1on2, method = "gamma")$p.v
+  inner.rec1[i, 2] <- t.test(Y[, 2]^3 * res1on2)$p.v 
+  inner.rec1[i, 3] <- emplik::el.test(Y[, 2]^3 * res1on2, mu = 0)$Pv
+  inner.rec1[i, 4] <- emplik::el.test(cbind(Y[, 2]^3 * res1on2, Y[, 2] * res1on2^3),
+                                      mu = rep(0, 2))$Pv
+  
+  
+    ### Null is right ###
+  res2on1 <- lm(Y[,2] ~Y[, 1])$res
+  inner.rec1[i, 5] <- dHSIC::dhsic.test(Y[, 1], res2on1, method = "gamma")$p.v
+  inner.rec1[i, 6] <- t.test(Y[, 1]^3 * res2on1)$p.v
+  inner.rec1[i, 7] <- emplik::el.test(Y[, 1]^3 * res2on1, mu = 0)$Pv
+  inner.rec1[i, 8] <- emplik::el.test(cbind(Y[, 1] * res2on1^3, Y[, 1]^3 * res2on1),
+                                      mu = rep(0, 2))$Pv
+
+}
+# First 4 columns are proportion of significant p-values for test with incorrect direction 
+# Next 4 columns are proportion of significant p-values for test with correct direction 
+# Tests are:
+# dHSIC
+# t.test with K = 4
+# empirical likelihood with K = 4 and only 1 moment
+# empirical likelihood with K = 4 and 2 moments
+## Power ##
+colMeans(inner.rec1[, 1:4] < .05)
+##Level ##
+colMeans(inner.rec1[, 5:8] < .05)
+
+
+@
+
+
+\section{Edgeweights of 5, 4, 3}
+<<>>=
+B <- matrix(0, 3, 3)
+B[2, 1] <- 5; B[3, 1] <- 4; B[3, 2] <- 3
+
+sim.size <- 1000
+n <- 500
+p <- 3
+
+inner.rec2 <- matrix(0, sim.size, 8)
+colnames(inner.rec2) <- c(paste("Inc", c("dhisc", "t_test", "el_single", "el_both")),
+                          paste("Cor", c("dhisc", "t_test", "el_single", "el_both")))
+for(i in 1:sim.size){
+
+  
+  errs <- matrix(runif(n * p, -1, 1), n, p)
+  Y <- solve(diag(3) - B,  t(errs))
+  Y <- t(Y)
+  
+  
+  ### Null is wrong ###
+  res1on2 <- lm(Y[,1] ~Y[, 2])$res
+  
+  inner.rec2[i, 1] <- dHSIC::dhsic.test(Y[, 2], res1on2, method = "gamma")$p.v
+  inner.rec2[i, 2] <- t.test(Y[, 2]^3 * res1on2)$p.v 
+  inner.rec2[i, 3] <- emplik::el.test(Y[, 2]^3 * res1on2, mu = 0)$Pv
+  inner.rec2[i, 4] <- emplik::el.test(cbind(Y[, 2]^3 * res1on2, Y[, 2] * res1on2^3),
+                                      mu = rep(0, 2))$Pv
+  
+  
+  ### Null is right ###
+  res2on1 <- lm(Y[,2] ~Y[, 1])$res
+  
+  inner.rec2[i, 5] <- dHSIC::dhsic.test(Y[, 1], res2on1, method = "gamma")$p.v
+  inner.rec2[i, 6] <- t.test(Y[, 1]^3 * res2on1)$p.v
+  inner.rec2[i, 7] <- emplik::el.test(Y[, 1]^3 * res2on1, mu = 0)$Pv
+  inner.rec2[i, 8] <- emplik::el.test(cbind(Y[, 1] * res2on1^3, Y[, 1]^3 * res2on1),
+                                      mu = rep(0, 2))$Pv
+
+}
+
+# First 4 columns are proportion of significant p-values for test with incorrect direction 
+# Next 4 columns are proportion of significant p-values for test with correct direction 
+# Tests are:
+# dHSIC
+# t.test with K = 4
+# empirical likelihood with K = 4 and only 1 moment
+# empirical likelihood with K = 4 and 2 moments
+## Power ##
+colMeans(inner.rec2[, 1:4] < .05)
+##Level ##
+colMeans(inner.rec2[, 5:8] < .05)
+
+@
+
+
+\end{document}
