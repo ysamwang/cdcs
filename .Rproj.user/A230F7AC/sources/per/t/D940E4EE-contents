@@ -1,0 +1,132 @@
+famaData <- read.csv("~/confSets/data/fama12_23.csv")
+# famaData <- read.csv("~/Dropbox/confSetGraphs/code/rPkg/data_analysis/data/fama12_23.csv")
+# 
+Y <- famaData[which(substr(famaData[,1], 1, 4) >= 2019), -1]
+Y <- scale(Y)
+
+colnames(Y)[causalXtreme::direct_lingam_search(Y)]
+
+
+colMeans(Y^3)
+colMeans(Y^4)
+
+n <- nrow(Y)
+p <- ncol(Y)
+J <- 2
+
+
+G1 <- array(0, dim = c(n, 4, p) )
+G2 <- array(0, dim = c(n, 3, p) )
+
+set.seed(100)
+
+for(u in 1:p){
+  
+  for(j in 1:J){
+    
+      G1[, 2 * j - 1, u] <- sin(j * Y[,u])
+      G1[, 2 * j, u] <- cos(j * Y[,u])
+    
+  }
+  
+  G2[, 1, u] <- scale(Y[, u]^2)
+  G2[, 2 , u] <- scale(Y[, u]^3)
+  G2[, 3 , u] <- scale(sign(Y[,u])*abs(Y[, u])^(2.5))
+  
+}
+
+G4 <- abind::abind(G1, G2, along = 2)
+
+
+names(Y)[causalXtreme::direct_lingam_search(Y)]
+
+out4 <- cdcs::brandAndBound(Y, G4, bs = 800, aggType = 3, alpha = .05,
+                            pValueAgg = "tippet")
+
+factorial(12) / nrow(out4[which(out4[,1] >= .05), ])
+table(out4[which(out4[,1] >= .05) ,2])
+
+factorial(12) / nrow(out4[which(out4[,1] >= .1), ])
+table(out4[which(out4[,1] >= .05), 2])
+
+
+write.csv(out4, "~/confSets/results/data_analysis/fama_max_res_4_2019_23.csv", row.names = F)
+
+
+#### Calculate Squared distance for all orderings ####
+orderingComp <- function(o1, o2){
+  p <- length(o1)
+  temp <- 0
+
+  for(i in 1:(p-1)){
+    d1 <- o1[(i+1):p]
+    d2 <- o2[which(o2 == o1[i]):p]
+    temp <- temp + sum(!(d1 %in% d2))
+  }
+  return(temp)
+}
+
+fama2019 <- read.csv("~/confSets/results/data_analysis/fama_max_res_4_2019_23.csv")
+fama2019 <- fama2019[which(fama2019[,1] >= .05), ]
+fama2019 <- as.matrix(data.frame(fama2019[, -1]))
+
+
+sumSq <- rep(0, nrow(fama2019))
+for(i in 1:(nrow(fama2019))){
+
+    temp <- 0
+
+  for(j in setdiff(1:nrow(fama2019), i)){
+
+    temp <- temp + orderingComp(fama2019[i,], fama2019[j, ])^2
+
+  }
+
+  sumSq[i] <- temp
+
+  if(i %% 100 == 0){
+    cat(i)
+    cat("/")
+    cat(nrow(fama2019))
+    cat(" ")
+    cat(i / nrow(fama2019))
+    cat("\n")
+  }
+}
+
+
+min(sumSq)
+write.csv(sumSq, "~/confSets/results/data_analysis/sumSq_max_4_2019_23_95.csv", row.names = F)
+
+
+fama2019 <- read.csv("~/confSets/results/data_analysis/fama_max_res_4_2019_23.csv")
+fama2019 <- fama2019[which(fama2019[,1] >= .1), ]
+fama2019 <- as.matrix(data.frame(fama2019[, -1]))
+
+
+sumSq <- rep(0, nrow(fama2019))
+for(i in 1:(nrow(fama2019))){
+  
+  temp <- 0
+  
+  for(j in setdiff(1:nrow(fama2019), i)){
+    
+    temp <- temp + orderingComp(fama2019[i,], fama2019[j, ])^2
+    
+  }
+  
+  sumSq[i] <- temp
+  
+  if(i %% 100 == 0){
+    cat(i)
+    cat("/")
+    cat(nrow(fama2019))
+    cat(" ")
+    cat(i / nrow(fama2019))
+    cat("\n")
+  }
+}
+
+
+min(sumSq)
+write.csv(sumSq, "~/confSets/results/data_analysis/sumSq_max_4_2019_22_90.csv", row.names = F)

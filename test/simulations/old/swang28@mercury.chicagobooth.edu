@@ -1,0 +1,101 @@
+runInd <- 1
+args <- commandArgs(TRUE)
+for(i in 1:length(args)){
+  eval(parse(text = args[[i]]))
+}
+print(runInd)
+
+
+
+run.onceBnb <- function(p, n, distro, bs = 200, parent_prob = 1/3, verbose = F,
+                        cutoff = NULL, K = c(2,3)){
+  
+
+    dat <- cdcs::rDAG(p, n, parent_prob = parent_prob, lowScale = .8,
+                      highScale = 1, lowEdge = 1/3 * n^(-1/8), highEdge =  n^(-1/8),
+                      dist = distro, uniqueTop = T)
+    
+    Y <- scale(dat$Y)
+    
+    outlingamDirect <- cdcs::directLiNGAM(Y, verbose = verbose, metric = "dhsic")
+    
+    
+
+    ## Fill up the G array
+    if(is.null(cutoff)){cutoff <- log(n) * 3}
+    G <- array(0, dim = c(n, length(K), p))
+    for(pp in 1:p){
+      for(k in 1:length(K)){
+        G[, , pp] <- sign(Y[, pp]) * pmin(abs(Y[, pp]^K[k]), cutoff)
+      }
+    }
+    
+    
+    time_2_2_F <- system.time(out_2_2_F <- cdcs::brandAndBound(Y, G, bs = bs, withinAgg = 2,
+                                                           aggType = 2, alpha = .1,
+                                                           pValueAgg = "fisher", verbose = verbose))
+    
+    time_2_2_T <- system.time(out_2_2_T <- cdcs::brandAndBound(Y, G, bs = bs, withinAgg = 2,
+                                                               aggType = 2, alpha = .1,
+                                                               pValueAgg = "tippet", verbose = verbose))
+    
+    
+    time_3_3_F <- system.time(out_3_3_F <- cdcs::brandAndBound(Y, G, bs = bs, withinAgg = 3,
+                                                           aggType = 'inf', alpha = .1,
+                                                           pValueAgg = "fisher", verbose = verbose))
+    time_3_3_T <- system.time(out_3_3_T <- cdcs::brandAndBound(Y, G, bs = bs, withinAgg = 3,
+                                                               aggType = 'inf', alpha = .1,
+                                                               pValueAgg = "tippet", verbose = verbose))
+    
+  
+  
+  rec <- c(sum(out_2_2_F$pValue > .1), all(out_2_2_F[1, -1] == 1:p), time_2_2_F[3], mean(cdcs::getAncest(out_2_2_F[,-1])[lower.tri(dat$B)] == 1 ),
+           sum(out_2_2_T$pValue > .1), all(out_2_2_T[1, -1] == 1:p), time_2_2_T[3], mean(cdcs::getAncest(out_2_2_T[,-1])[lower.tri(dat$B)] == 1 ),
+           sum(out_3_3_F$pValue > .1), all(out_3_3_F[1, -1] == 1:p), time_3_3_F[3], mean(cdcs::getAncest(out_3_3_F[,-1])[lower.tri(dat$B)] == 1 ),
+           sum(out_3_3_T$pValue > .1), all(out_3_3_T[1, -1] == 1:p), time_3_3_T[3], mean(cdcs::getAncest(out_3_3_T[,-1])[lower.tri(dat$B)] == 1 ),
+           all(outlingamDirect == 1:p))
+  
+  names(rec) <- c(paste(rep(c("twoFisher", "twoTippet", "threeFisher", "threeTippet"), each = 4), rep(c("size", "truth", "time", "ancest"), times = 4), sep = "_"),
+                  "pointEst")
+  
+  return(rec)
+}
+
+
+##################
+library(parallel)
+library(cdcs)
+
+sample.size <- 1000
+rep.runs <- 50
+
+n.list <- c(500, 1000, 1500, 2500)
+d.list <- c("unif", "lognorm", "gamma", "weibull", "laplace")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list)
+### Param grid Size 400
+
+
+p <- 8
+
+n <- param.grid[runInd, 1]
+distro <- param.grid[runInd, 2]
+
+cl <- makeCluster(3)
+clusterExport(cl, ls())
+out <- t(parSapply(cl, 1:rep.runs, function(x){run.onceBnb(p, n, distro)}))
+
+
+outTab <- data.frame(p, n, distro, out)
+
+colnames(outTab) <- c("p","n", "distro", 
+                      paste(rep(c("twoFisher", "twoTippet", "threeFisher", "threeTippet"), each = 4),
+                            rep(c("size", "truth", "time", "ancest"), times = 4), sep = "_"), "pointEst")
+
+
+write.csv(outTab, paste("../bnb/bnbRes_",runInd, ".csv", sep = ""))
+
+stopCluster(cl)
+
+
+
+

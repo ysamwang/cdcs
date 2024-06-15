@@ -1,0 +1,24 @@
+{
+    "id": "82BD2833",
+    "path": "~/Dropbox/confSetGraphs/code/rPkg/cdcs/test/simulations/linearModelGrowingDim_test.R",
+    "project_path": "test/simulations/linearModelGrowingDim_test.R",
+    "type": "r_source",
+    "hash": "1080568630",
+    "contents": "",
+    "dirty": false,
+    "created": 1616018260886.0,
+    "source_on_save": false,
+    "relative_order": 10,
+    "properties": {
+        "cursorPosition": "196,0",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1616019376,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1616019376620,
+    "read_only": false,
+    "read_only_alternatives": []
+}

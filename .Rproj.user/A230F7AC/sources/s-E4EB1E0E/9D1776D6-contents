@@ -1,0 +1,30 @@
+errs <- matrix(0, nrow = n, ncol = p)
+for(j in 1:p){
+  
+  distTemp <- sample(c("unif", "lognorm", "gamma", "weibull", "laplace"), size = 1)
+  
+  if(distTemp == "unif"){
+    
+    errs[,j] <- runif(n, -sqrt(3), sqrt(3))  * scales[j]
+    
+  } else if (distTemp == "lognorm") {
+    
+    errs[,j] <- (exp(rnorm(n)) - exp(1/2)) / sqrt(exp(1) * (exp(1) - 1)) * scales[j]
+    
+  } else if (distTemp == "gamma"){
+    
+    errs[,j] <- (rgamma(n , 1, 1) - 1) * scales[j]
+    
+  } else if (distTemp == "weibull"){
+    a <- 3/4
+    
+    errs[,j] <- ((rweibull(n , shape = a, 1) - gamma(1 + 1/a)) / sqrt(gamma(1 + 2/a) - gamma(1 + 1/a)^2)) * scales[j]
+  } else if (distTemp == "laplace"){
+    
+    errs[,j] <- rmutil::rlaplace(n , 0, 1/sqrt(2)) * scales[j]
+  }
+  if(sd(errs[,j]) == 0){
+    print(distTemp)
+  }
+}
+errs

@@ -1,0 +1,41 @@
+[
+    {
+        "file": "/home/swang24/Dropbox/confSetGraphs/code/rPkg/cdcs/src/bnbHelper.cpp",
+        "file_last_write": 1604688726.0,
+        "definitions": [
+            {
+                "usr": "c:@F@bnbHelperMulti#1$@N@arma@S@Col>#i#1S0_#&1$@N@arma@S@Mat>#d#$@N@arma@S@Col>#d#I#I#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "bnbHelperMulti(const arma::uvec, const arma::uvec, const arma::mat &, arma::vec, int, int, int)",
+                "file": "/home/swang24/Dropbox/confSetGraphs/code/rPkg/cdcs/src/bnbHelper.cpp",
+                "line": 22,
+                "column": 12
+            }
+        ]
+    },
+    {
+        "file": "/home/swang24/Dropbox/confSetGraphs/code/rPkg/cdcs/src/singleTest.cpp",
+        "file_last_write": 1614644631.0,
+        "definitions": [
+            {
+                "usr": "c:@F@singleTestcppMulti#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@Col>#d#S3_#I#I#I#I#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "singleTestcppMulti(const arma::mat &, const arma::colvec &, arma::vec, int, int, int, int, int)",
+                "file": "/home/swang24/Dropbox/confSetGraphs/code/rPkg/cdcs/src/singleTest.cpp",
+                "line": 18,
+                "column": 12
+            },
+            {
+                "usr": "c:@F@exhaustiveHelperMulti#1$@N@arma@S@Col>#i#&1$@N@arma@S@Mat>#d#$@N@arma@S@Col>#d#I#I#I#I#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "exhaustiveHelperMulti(const arma::uvec, const arma::mat &, arma::vec, int, int, int, int, int)",
+                "file": "/home/swang24/Dropbox/confSetGraphs/code/rPkg/cdcs/src/singleTest.cpp",
+                "line": 259,
+                "column": 12
+            }
+        ]
+    }
+]

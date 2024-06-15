@@ -1,0 +1,26 @@
+{
+    "id": "D37E388A",
+    "path": "~/Dropbox/confSetGraphs/code/rPkg/comparison/linModTest_alt.R",
+    "project_path": null,
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1660162089898.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "96,15",
+        "scrollLine": "87"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1660427211,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1660427211634,
+    "read_only": false,
+    "read_only_alternatives": []
+}

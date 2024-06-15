@@ -1,0 +1,178 @@
+#' Confidence sets for Causal Discovery
+#'
+#'
+#' Testing single causal ordering for SEM
+#'
+#' @param Y an n by p matrix with the observations
+#' @param K a vector containing integer values greater than 2 which will be used for the test statistic
+#' @param bs the number of bootstrap resamples for the null distribution
+#' @param aggType the aggregation used for the test statistic
+#' #' \itemize{
+#' \item "inf": \eqn{\max_{j \prec v} \vert (Y_j^K)^T \eta_v \vert} 
+#' \item "1" \eqn{\sum_{j \prec v} \vert (Y_j^K)^T \eta_v \vert}
+#' \item "2" \eqn{\sum_{j \prec v} \vert (Y_j^K)^T \eta_v \vert}
+#' }
+#' @param pValueAgg the procedure for aggregating p-values 
+#' #' \itemize{
+#' \item "tippet": \eqn{T = \min p_{\theta(v)})} which follows a Beta(1, p-1) distribution
+#' \item "fisher": \eqn{T = -2 \sum_{\theta(v) > 1} \log( p_{\theta(v)})} which follows a chi-squared with p-1 degrees of freedom
+#' }
+#' @param intercept 1 indicates that an intercept should be used; 0 indicates no intercept is used
+#' @param verbose T or F. Indicates whether to print updates to console  
+#' @return
+#' a vector of p-values corresponding to test 
+testOrderingSem <- function(Y, G, bs = 200, withinAgg = 2, 
+                              aggType = 1, alpha = .05,
+                              pValueAgg = "tippett", intercept = 1,
+                              verbose = T, basis = "bspline", M = 5){
+  
+  
+  ## Dimensions of Y
+  n <- dim(Y)[1]
+  p <- dim(Y)[2]
+  
+  ancestMat <- matrix(0, n, p*M)
+  if(basis == "poly"){
+    for(i in 1:p){
+      ancestMat[, (M * (i-1) + 1):(M*i)] <- poly(Y[,i], M)
+    }
+  } else if (basis == "bspline"){
+    for(i in 1:p){
+      ancestMat[, (M * (i-1) + 1):(M*i)] <- splines::bs(Y[,i], df = M)
+    }
+  }
+  
+  
+  
+  
+  ## Check if aggType is correct ##
+  if(!(aggType %in% c("inf", 1, 2))){
+    stop("Incorrect aggType: must be either 'inf', '1', '2'")
+  }
+  
+  ## Check if intercept is correct ##
+  if(!(intercept %in% c(T, F))){
+    stop("intercept must be either TRUE or FALSE")
+  }
+  
+  
+  ### Change aggType and intercept to numeric for passing onto helpers   
+  if(aggType == "inf"){
+    aggType <- 0
+  }
+  
+  # make intercept 0/1
+  intercept <- as.numeric(intercept)
+  
+  
+  ### takes in a set of ancestors and tests whether any node not included in the set 
+  ### could be a descendant of the ancestors
+  .testAncest <- function(ancest, v){
+    
+    ## will come in as a list because gets pulled out of data.frame
+    ancest <- unlist(ancest)
+    
+    ## set of any nodes not in the set which could be potential children
+    possibleChildren <- v
+    
+    ## subtract 1 for cpp indexing
+    # cat(cdcs::mapVarToInd(ancest, M))
+    pVals <- cdcs::bnbHelperanm(ancestMat[, cdcs::mapVarToInd(ancest, M), drop = F], Y[, possibleChildren, drop = F],
+                                G[, , ancest, drop = F], withinAgg = withinAgg, aggType = aggType, 
+                                bs = bs, intercept = intercept)
+    
+    ## data frame with:
+    ## Column 1: p-values (converted to uniform)
+    ## Column 2: possible children
+    return(cdcs::convToCont(pVals$pVals, bs))
+    
+  }
+  
+  
+  ### Calculates a cut-off based on whether the aggregation type is a max or sum
+  if(pValueAgg == "fisher"){
+    
+    ### Cut off using fishers aggrgation method ###
+    cutoff <- qchisq(1 - alpha, df = 2 * (p-1))
+    currentTrack <- rep(0, p)
+    
+  } else {
+    
+    ### Calculate the quantile of the minimum of uniforms ###
+    cutoff <- qbeta(alpha, 1, p-1)
+    currentTrack <- rep(1, p)
+    
+  }
+  
+  
+  # Initial values
+  # Start with each node and initial currentTrack value
+  currentSeq <- data.frame(currentTrack, matrix(1:p, ncol = 1))
+  names(currentSeq) <- c("currentTrack", "V1")
+  
+  
+  while(dim(currentSeq)[1] > 0 & dim(currentSeq)[2] <= p){
+    
+    # hash involves all sequences which are the same set
+    # computation only depends on v and set an(v), so the "ordering" of an(v)  doesn't matter
+    hash <- apply(currentSeq[, -1, drop = F], MAR = 1, function(x){paste(sort(unlist(x)), collapse = ".")})
+    
+    # uniqueHash is the list of unique ancestral sets
+    uniqueHash <- unique(hash)
+    
+    # each ongoing ordering maps to a specific set
+    hashInd <- match(hash, uniqueHash)
+    
+    
+    if(verbose){
+      print("==========================================================")
+      print(paste("Current Order: ", dim(currentSeq)[2] -1,  sep = ""))
+      print(paste("Number of Perm: ", dim(currentSeq)[1] , "( ",
+                  round(dim(currentSeq)[1] / prod(c(p:(p-(dim(currentSeq)[2] -2)))), 3) ," )", sep = ""))
+      print(paste("Number of Comb: ", length(uniqueHash), sep = "" ))
+      cat("\n")
+    }  
+    
+    
+    # For each value in uniqueHash, get a representative set and run .testAncest on that set
+    uniqueRes <- apply(currentSeq[match(uniqueHash, hash), -1, drop = F], MAR = 1, .testAncest)
+    
+    ### Update Sequences ###
+    updatedSeq <- lapply(1:length(hash), .updatePvals)
+    currentSeq <- as.data.frame(data.table::rbindlist(updatedSeq))
+    
+  }
+  
+  ## Check if there are any orderings to return
+  if(dim(currentSeq)[1] == 0){
+    
+    # return empty data frame
+    currentSeq <- data.frame(matrix(0, nrow = 0, ncol = p + 1))
+    
+  } else {
+    
+    ## if there are orderings to be returned
+    ## Col 1: final p-value of aggregated p-values 
+    ## then form data frame with orderings
+    if(pValueAgg == "fisher"){
+      
+      pVals <- pchisq(currentSeq[, 1], df = 2 * (p-1), lower.tail = F)
+      
+    } else {
+      
+      pVals <- pbeta(currentSeq[, 1], 1, p-1, lower.tail = T)
+      
+    }
+    
+    currentSeq[, 1] <- pVals
+  }
+  names(currentSeq) <- c("pValue", paste("V", 1:p, sep = ""))
+  
+  return(currentSeq)
+}
+
+mapVarToInd <- function(ind, B){
+  c(sapply(ind, function(x){(B*(x-1) + 1):(B*x)}))  
+}
+
+

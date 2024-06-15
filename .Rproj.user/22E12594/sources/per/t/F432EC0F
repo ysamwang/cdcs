@@ -1,0 +1,25 @@
+{
+    "id": "F432EC0F",
+    "path": "~/Dropbox/confSetGraphs/code/rPkg/cdcs/test/simulations/rateSims2.R",
+    "project_path": "test/simulations/rateSims2.R",
+    "type": "r_source",
+    "hash": "645963698",
+    "contents": "",
+    "dirty": false,
+    "created": 1615582543926.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "tempName": "Untitled1",
+        "cursorPosition": "38,0",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1615852070,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1615852070918,
+    "read_only": false,
+    "read_only_alternatives": []
+}

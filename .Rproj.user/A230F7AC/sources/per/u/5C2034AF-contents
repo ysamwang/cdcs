@@ -1,0 +1,7 @@
+data <- read.csv("~/Dropbox/confSetGraphs/code/rPkg/data_analysis/results/fama_max_res_4_2019_22.csv")
+sumSq <- read.csv("~/Dropbox/confSetGraphs/code/rPkg/data_analysis/results/sumSq_max_4_2019_22_90.csv")
+
+cs90 <- data[which(data[,1] >= .1), ]
+dim(sumSq)
+dim(cs90)
+hist(sumSq[,1])

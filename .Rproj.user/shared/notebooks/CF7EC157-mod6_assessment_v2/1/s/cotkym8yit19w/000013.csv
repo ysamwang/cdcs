@@ -1,0 +1,4 @@
+"0","# fit the ridge regression (alpha = 0 indicates ridge) with a poisson family   "
+"0","ridge_mod <- glmnet::cv.glmnet(y = bike_data_train$bike_counts, x = as.matrix(bike_data_train[, -c(1,2)]),"
+"0","                               alpha = 0, family = ""poisson"")"
+"0","plot(ridge_mod)"

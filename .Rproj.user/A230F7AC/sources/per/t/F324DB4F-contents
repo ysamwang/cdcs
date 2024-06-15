@@ -1,0 +1,211 @@
+## Notes:
+# Updated 4/25/24 for max statistic and including 2023 data
+#
+# Main analysis done on cluster using fama_cluster23.R
+# This is for post-processing the results of that analysis
+# which is recorded in the fama_max_res2019_23.csv file
+#
+
+
+
+## Distance for comparing two orderings
+# used for computing frechet mean
+orderingComp <- function(o1, o2){
+  p <- length(o1)
+  temp <- 0
+  
+  for(i in 1:(p-1)){
+    d1 <- o1[(i+1):p]
+    d2 <- o2[which(o2 == o1[i]):p]
+    temp <- temp + sum(!(d1 %in% d2))
+  }
+  return(temp)
+}
+
+# fama2019 <- read.csv("~/confSets/results/data_analysis/fama_max_res2019_23.csv")
+fama2019 <- read.csv("~/Dropbox/confSetGraphs/code/rPkg/data_analysis/results/fama_max_res2019_23.csv")
+fama2019 <- as.matrix(data.frame(fama2019[, -1]))
+
+
+### Read data ###
+library(plot.matrix)
+famaData <- read.csv("~/Dropbox/confSetGraphs/code/rPkg/data_analysis/data/fama12_23.csv")
+# centered (but not scaled) version which will be used to estimate causal effect later
+Y.centered <- scale(famaData[, -1], scale = F)
+# centered and scaled which will be used for point estimate
+Y <- scale(famaData[, -1])
+# The sum of squares for distance to calculate frechent mean 
+sumSq <- as.matrix(read.csv("~/Dropbox/confSetGraphs/code/rPkg/data_analysis/results/sumSq_2019_max.csv"))
+# The confidence dence with alpha =.05
+fama2019 <- as.matrix(data.frame(read.csv("~/Dropbox/confSetGraphs/code/rPkg/data_analysis/results/fama_max_res2019_23.csv")))
+
+# Point estimate
+pointEst <- causalXtreme::direct_lingam_search(Y)
+colnames(Y)[pointEst]
+
+# Frechet Mean
+frechet_mean <- fama2019[which.min(sumSq), -1]
+colnames(Y)[frechet_mean]
+
+### Figure 3 ###
+
+# Make Ancestral matrix
+A <- cdcs::getAncest(fama2019)
+colnames(A) <- rownames(A) <- colnames(Y)
+ZZ <- matrix(0, 12, 12)
+ZZ[lower.tri(ZZ, diag = F)] <- 1
+symA <- A + t(ZZ - A)
+mat <- data.frame(rep(colnames(Y), times = 12), rep(colnames(Y), each = 12), c(symA))
+names(mat) <- c("Descendant", "Ancestor", "Proportion")
+
+# Rearrange rows and columns to align with frechet mean
+symA.rearrange <- symA[colnames(Y)[frechet_mean], colnames(Y)[frechet_mean]]
+colnames(Y)[frechet_mean]
+# Make names shorter
+rownames(symA.rearrange) <- colnames(symA.rearrange) <- c("Utl", "Enrg", "Hlth", "NoDr", "Drb",
+                                                          "Chem","Whl", "Fin", "Mfg","BusEq", "Tel","Oth")
+
+# Get Distances from Frechet Mean
+distanceDist <- rep(0, nrow(fama2019))
+for(i in 1:nrow(fama2019)){
+  distanceDist[i] <- orderingComp(fama2019[i, -1], fama2019[which.min(sumSq), -1])
+}
+
+# 
+# setEPS()
+# postscript("~/Dropbox/Apps/Overleaf/Confidence Sets for Causal Discovery/figures/frechetMean_max23.eps",
+#            width = 8, height = 3)
+# par(oma = c(0, 0, 0, 2), mar = c(5, 4, 2, 2), mfrow = c(1,2))
+# hist(distanceDist, xlab = "", main = "", cex.axis = .7, ylab = "")
+# mtext("Distance from Mean Ordering", line = 2, side = 1, cex = .9)
+# mtext("Freq", line = 2, side = 2, cex = .7)
+# abline(v = orderingComp(fama2019[which.min(sumSq), -1], pointEst), col = "red")
+# 
+# plot(symA.rearrange, col = c("white",RColorBrewer::brewer.pal(n = 9, "Blues")),
+#      cex.axis = .8, las = 2, xlab = "", ylab = "",
+#      main = "", key=list(cex.axis=.8, tick=FALSE, side = 4),
+#      spacing.key = c(1,.5, -.2))
+# mtext("Descendant", side = 2, line = 3, cex = .9)
+# mtext("Ancestor", side = 1, line = 3, cex = .9)
+# 
+# 
+# dev.off()
+ 
+# ### Get info for text ###
+
+# Set contains 1/45000 of possible 12! orderings
+factorial(12) / nrow(fama2019[which(fama2019[,1] > .05), ])
+
+
+# Creaste Ancest MAt
+ancestMat <- cdcs::getAncest(fama2019[which(fama2019[,1] > .05), ])
+colnames(ancestMat) <- rownames(ancestMat) <- names(Y)
+ancestMat <- round(ancestMat, 2)
+ancestMat[upper.tri(ancestMat, diag = T)] <- ""
+
+xtable::xtable(ancestMat)
+
+
+
+
+
+colnames(Y)
+colnames(Y)[pointEst]
+colnames(Y)[frechet_mean]
+
+# Mfg (3) onto Energy (4)
+out <- cdcs::ci_modSelect(fama2019, 3, 4, effectType = "total", alpha = .05, Y.centered)
+outReg <- lm(Y.centered[, 4, drop = F] ~  Y.centered[, pointEst[1:which(pointEst == 3) ]] -1)
+confint(outReg, level = .9)
+#Model selection
+# [0, 0], [0.43300013689132, 1.43527185286739]
+# No Model selection
+#(0.61726723  0.85989221)
+
+
+
+# Chems (5) onto manuf (3)
+out <- cdcs::ci_modSelect(fama2019, 5, 3, effectType = "total", alpha = .05, Y.centered)
+out
+
+ 
+### Getting CI's per edge (reviewer comments) ###
+lengthMat <- matrix(0, 12, 12)
+adjMat <- matrix(0, 12, 12)
+for(j in 1:12){
+  for(k in 1:12){
+    if(j != k){
+      temp <- cdcs::ci_modSelect(fama2019, k, j, effectType = "total", alpha = .05, Y.centered)
+      lengthMat[j, k] <- temp$le
+      adjMat[j, k] <- temp$num
+    }
+  }
+}
+
+
+colnames(lengthMat) <- rownames(lengthMat) <-
+  colnames(adjMat) <- rownames(adjMat) <- colnames(Y)
+
+
+lengthMat.rearrange <- lengthMat[colnames(Y)[frechet_mean], colnames(Y)[frechet_mean]]
+rownames(symA.rearrange) <- colnames(symA.rearrange) <- c("Utl", "Enrg", "Hlth", "NoDr", "Drb",
+                                                          "Chem","Whl", "Fin", "Mfg","BusEq", "Tel","Oth")
+
+
+adjMat.rearrange <- adjMat[colnames(Y)[frechet_mean], colnames(Y)[frechet_mean]]
+rownames(symA.rearrange) <- colnames(symA.rearrange) <- c("Utl", "Enrg", "Hlth", "NoDr", "Drb",
+                                                          "Chem","Whl", "Fin", "Mfg","BusEq", "Tel","Oth")
+
+
+
+# library(plot.matrix)
+# setEPS()
+# postscript("~/Dropbox/Apps/Overleaf/Confidence Sets for Causal Discovery/figures/ciHeat_max23.eps",
+#            width = 8, height = 3)
+# par(oma = c(0, 0, 0, 2), mar = c(5, 4, 2, 5), mfrow = c(1,2))
+# plot(lengthMat.rearrange, col = c("white",RColorBrewer::brewer.pal(n = 9, "Blues")),
+#      cex.axis = .8, las = 2, xlab = "", ylab = "",
+#      main = "", key=list(cex.axis=.8, tick=FALSE, side = 4),
+#      spacing.key = c(1,.5, -.2))
+# mtext("Descendant", side = 2, line = 3, cex = .9)
+# mtext("Ancestor", side = 1, line = 3, cex = .9)
+# mtext("Length of CI", side = 3, line = 0, cex = .9)
+# 
+# par(mar = c(5, 5, 2, 2))
+# plot(adjMat.rearrange, col = c("white",RColorBrewer::brewer.pal(n = 9, "Blues")),
+#      cex.axis = .8, las = 2, xlab = "", ylab = "",
+#      main = "", key=list(cex.axis=.8, tick=FALSE, side = 4),
+#      spacing.key = c(1,.5, -.2))
+# mtext("Descendant", side = 2, line = 3, cex = .9)
+# mtext("Ancestor", side = 1, line = 3, cex = .9)
+# mtext("Num of Adjustment Sets", side = 3, line = 0, cex = .9)
+# dev.off()
+# 
+#
+
+
+fama2019 <- as.matrix(read.csv("~/Dropbox/confSetGraphs/code/rPkg/data_analysis/results/fama_max_res_4_2019_22.csv"))
+sumSq <- as.matrix(read.csv("~/Dropbox/confSetGraphs/code/rPkg/data_analysis/results/sumSq_max_4_2019_22_90.csv"))
+famaData <- read.csv("~/Dropbox/confSetGraphs/code/rPkg/data_analysis/data/fama12_23.csv")
+famaData <- famaData[which(substr(famaData[,1], 1, 4) < 2023), ]
+# centered (but not scaled) version which will be used to estimate causal effect later
+Y.centered <- scale(famaData[, -1], scale = F)
+# centered and scaled which will be used for point estimate
+Y <- scale(famaData[, -1])
+
+
+fama2019 <- fama2019[which(fama2019[,1] >= .1), ]
+dim(sumSq)
+dim(fama2019)
+
+pointEst <- causalXtreme::direct_lingam_search(Y)
+colnames(Y)[pointEst]
+# Get Distances from Frechet Mean
+distanceDist <- rep(0, nrow(fama2019))
+for(i in 1:nrow(fama2019)){
+  distanceDist[i] <- orderingComp(fama2019[i, -1], fama2019[which.min(sumSq), -1])
+}
+
+orderingComp(pointEst, fama2019[which.min(sumSq), -1])
+
+

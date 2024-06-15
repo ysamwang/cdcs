@@ -1,0 +1,512 @@
+G <- array(0, dim = c(n, 2*K, p))
+for(j in 1:p){
+for(k in 1:K){
+# G[, 2 * k -1, j] <- pmax(0, Y[,j])^K
+# G[, 2 * k, j] <- pmin(0, Y[,j])^K
+G[, 2 * k -1, j] <- sin(Y[,j]* k/2)
+G[, 2 * k, j] <- cos(Y[,j] *k/2)
+}
+}
+for(j in 1:length(m.list)){
+time.rec <- system.time(out <- cdcs::brandAndBound_anm(Y, G, bs =bs, withinAgg = 2,
+aggType = 2, alpha = .1,
+pValueAgg = "tippet",
+intercept = 1, verbose = F, basis = "bspline", M = m.list[j]))[3]
+rec[j, ] <- c(sum(out$pValue > .1), all(out[1, -1] == 1:p),
+mean(cdcs::getAncest(out[which(out$pValue > .1),-1])[lower.tri(matrix(0, p,p))] == 1 ), time.rec)
+}
+rec
+29038 / factorial(8)
+n <- 1000
+p <- 8
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = 1/4, funcType = "GP", h=1, dist = "gauss", lowScale = 1/5, highScale = sqrt(2)/5)
+Y <- scale(out$Y)
+K <- 4
+m.list <- c(3,5,10)
+rec <- matrix(0, length(m.list), 4)
+colnames(rec) <- c("size", "cover", "ancest", "time")
+G <- array(0, dim = c(n, 2*K, p))
+for(j in 1:p){
+for(k in 1:K){
+G[, 2 * k -1, j] <- pmax(0, Y[,j])^K
+G[, 2 * k, j] <- pmin(0, Y[,j])^K
+# G[, 2 * k -1, j] <- sin(Y[,j]* k/2)
+# G[, 2 * k, j] <- cos(Y[,j] *k/2)
+}
+}
+for(j in 1:length(m.list)){
+time.rec <- system.time(out <- cdcs::brandAndBound_anm(Y, G, bs =bs, withinAgg = 2,
+aggType = 2, alpha = .1,
+pValueAgg = "tippet",
+intercept = 1, verbose = F, basis = "bspline", M = m.list[j]))[3]
+rec[j, ] <- c(sum(out$pValue > .1), all(out[1, -1] == 1:p),
+mean(cdcs::getAncest(out[which(out$pValue > .1),-1])[lower.tri(matrix(0, p,p))] == 1 ), time.rec)
+}
+rec
+40320/ factorial(8)
+n <- 1000
+p <- 8
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = 1/4, funcType = "GP", h=1, dist = "gauss", lowScale = 1/5, highScale = sqrt(2)/5)
+Y <- out$Y
+K <- 4
+m.list <- c(3,5,7)
+rec <- matrix(0, length(m.list), 4)
+colnames(rec) <- c("size", "cover", "ancest", "time")
+G <- array(0, dim = c(n, 2*K, p))
+for(j in 1:p){
+for(k in 1:K){
+G[, 2 * k -1, j] <- pmax(0, Y[,j])^K
+G[, 2 * k, j] <- pmin(0, Y[,j])^K
+# G[, 2 * k -1, j] <- sin(Y[,j]* k/2)
+# G[, 2 * k, j] <- cos(Y[,j] *k/2)
+}
+}
+for(j in 1:length(m.list)){
+time.rec <- system.time(out <- cdcs::brandAndBound_anm(Y, G, bs =bs, withinAgg = 2,
+aggType = 2, alpha = .1,
+pValueAgg = "tippet",
+intercept = 1, verbose = F, basis = "bspline", M = m.list[j]))[3]
+rec[j, ] <- c(sum(out$pValue > .1), all(out[1, -1] == 1:p),
+mean(cdcs::getAncest(out[which(out$pValue > .1),-1])[lower.tri(matrix(0, p,p))] == 1 ), time.rec)
+}
+rec
+27792 / factorial(8)
+m.list <- c(3,5,7)
+rec <- matrix(0, length(m.list), 4)
+colnames(rec) <- c("size", "cover", "ancest", "time")
+G <- array(0, dim = c(n, 2*K, p))
+for(j in 1:p){
+for(k in 1:K){
+# G[, 2 * k -1, j] <- pmax(0, Y[,j])^K
+# G[, 2 * k, j] <- pmin(0, Y[,j])^K
+G[, 2 * k -1, j] <- sin(Y[,j]* k/2)
+G[, 2 * k, j] <- cos(Y[,j] *k/2)
+}
+}
+for(j in 1:length(m.list)){
+time.rec <- system.time(out <- cdcs::brandAndBound_anm(Y, G, bs =bs, withinAgg = 2,
+aggType = 2, alpha = .1,
+pValueAgg = "tippet",
+intercept = 1, verbose = F, basis = "bspline", M = m.list[j]))[3]
+rec[j, ] <- c(sum(out$pValue > .1), all(out[1, -1] == 1:p),
+mean(cdcs::getAncest(out[which(out$pValue > .1),-1])[lower.tri(matrix(0, p,p))] == 1 ), time.rec)
+}
+rec
+G <- array(0, dim = c(n, 2*K, p))
+for(j in 1:p){
+for(k in 1:K){
+G[, 2 * k -1, j] <- scale(pmax(0, Y[,j])^K)
+G[, 2 * k, j] <- scale(pmin(0, Y[,j])^K)
+# G[, 2 * k -1, j] <- sin(Y[,j]* k/2)
+# G[, 2 * k, j] <- cos(Y[,j] *k/2)
+}
+}
+for(j in 1:length(m.list)){
+time.rec <- system.time(out <- cdcs::brandAndBound_anm(Y, G, bs =bs, withinAgg = 2,
+aggType = 2, alpha = .1,
+pValueAgg = "tippet",
+intercept = 1, verbose = F, basis = "bspline", M = m.list[j]))[3]
+rec[j, ] <- c(sum(out$pValue > .1), all(out[1, -1] == 1:p),
+mean(cdcs::getAncest(out[which(out$pValue > .1),-1])[lower.tri(matrix(0, p,p))] == 1 ), time.rec)
+}
+rec
+run.onceFit <- function(p, n, distro, parent_prob = 1/3, h = 1, M = 50){
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob, funcType = "poly",
+M = M, dist = distro, lowScale = 1/5, highScale = sqrt(2)/5,
+noParentMult = 5)
+Y <- out$Y
+outcome <- cdcs::samplePoly(Y[, 2], M = M)$f + cdcs::samplePoly(Y[, 4], M = M)$f
+outcome <- outcome / 2
+finaloutcome <- outcome + rnorm(n, 1/5)
+### Splines ###
+m.list <- c(3, 5, 10, 15)
+recSplines <- matrix(0, length(m.list), 4)
+for(j in 1:length(m.list)){
+basis <- matrix(0, n, 0)
+for(k in 1:p){
+basis <- cbind(basis, splines::bs(Y[,k], df = m.list[j]))
+}
+noiseless <- lm(outcome~ basis)
+noisy <- lm(finaloutcome~ basis)
+recSplines[j, ] <- c(mean(abs(noiseless$res)), max(abs(noiseless$res)),
+mean(abs(outcome - noisy$fit)), max(abs(outcome - noisy$fit)))
+}
+recSplines <- data.frame(type = rep("S", length(m.list)), M = m.list, recSplines)
+names(recSplines)[-(1:2)] <- c("mean", "max", "meanNoise", "maxNoise")
+### Poly ###
+m.list <- c(3, 4, 5)
+recPoly <- matrix(0, length(m.list), 4)
+for(j in 1:length(m.list)){
+basis <- matrix(0, n, 0)
+for(k in 1:p){
+basis <- cbind(basis, getHermite(Y[,k], m.list[j]))
+}
+noiseless <- lm(outcome~ basis)
+noisy <- lm(finaloutcome~ basis)
+recPoly[j, ] <- c(mean(abs(noiseless$res)), max(abs(noiseless$res)),
+mean(abs(outcome - noisy$fit)), max(abs(outcome - noisy$fit)))
+}
+recPoly <- data.frame(type = rep("P", length(m.list)), M = m.list, recPoly)
+names(recPoly)[-(1:2)] <- c("mean", "max", "meanNoise", "maxNoise")
+rec <- rbind(recSplines, recPoly)
+return(rec)
+}
+run.onceFit(p =6, n =1000, distro = "gauss")
+run.onceFit <- function(p, n, distro, parent_prob = 1/3, h = 1, M = 50){
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob, funcType = "poly",
+M = M, dist = distro, lowScale = 1/5, highScale = sqrt(2)/5,
+noParentMult = 5)
+Y <- out$Y
+outcome <- cdcs::samplePoly(Y[, 2], M = M)$f + cdcs::samplePoly(Y[, 4], M = M)$f
+outcome <- outcome / 2
+finaloutcome <- outcome + rnorm(n, 1/5)
+### Splines ###
+m.list <- c(3, 5, 10, 15)
+recSplines <- matrix(0, length(m.list), 4)
+for(j in 1:length(m.list)){
+basis <- matrix(0, n, 0)
+for(k in 1:p){
+basis <- cbind(basis, splines::bs(Y[,k], df = m.list[j]))
+}
+noiseless <- lm(outcome~ basis)
+noisy <- lm(finaloutcome~ basis)
+recSplines[j, ] <- c(mean(abs(noiseless$res)), max(abs(noiseless$res)),
+mean(abs(outcome - noisy$fit)), max(abs(outcome - noisy$fit)))
+}
+recSplines <- data.frame(type = rep("S", length(m.list)), M = m.list, recSplines)
+names(recSplines)[-(1:2)] <- c("mean", "max", "meanNoise", "maxNoise")
+### Poly ###
+m.list <- c(3, 4, 5)
+recPoly <- matrix(0, length(m.list), 4)
+for(j in 1:length(m.list)){
+basis <- matrix(0, n, 0)
+for(k in 1:p){
+basis <- cbind(basis, cdcs::getHermite(Y[,k], m.list[j]))
+}
+noiseless <- lm(outcome~ basis)
+noisy <- lm(finaloutcome~ basis)
+recPoly[j, ] <- c(mean(abs(noiseless$res)), max(abs(noiseless$res)),
+mean(abs(outcome - noisy$fit)), max(abs(outcome - noisy$fit)))
+}
+recPoly <- data.frame(type = rep("P", length(m.list)), M = m.list, recPoly)
+names(recPoly)[-(1:2)] <- c("mean", "max", "meanNoise", "maxNoise")
+rec <- rbind(recSplines, recPoly)
+return(rec)
+}
+run.onceFit(p =6, n =1000, distro = "gauss")
+run.onceFit(p =6, n =1000, distro = "laplace")
+run.onceFit(p =6, n =1000, distro = "unif")
+run.onceFit(p =6, n =1000, distro = "gauss", M = 10)
+run.onceFit(p =6, n =1000, distro = "laplace", M = 10)
+run.onceFit(p =6, n =1000, distro = "unif", M = 10)
+run.onceFit(p =6, n =1000, distro = "gauss", M = 10)
+run.onceFit(p =6, n =1000, distro = "laplace", M = 10)
+run.onceFit(p =6, n =1000, distro = "unif", M = 10)
+run.onceFit(p =6, n =1000, distro = "gauss", M = 10)
+run.onceFit(p =6, n =1000, distro = "laplace", M = 10)
+run.onceFit(p =6, n =1000, distro = "unif", M = 10)
+run.onceFit(p =6, n =1000, distro = "gauss", M = 10)
+run.onceFit(p =6, n =1000, distro = "laplace", M = 10)
+run.onceFit(p =6, n =1000, distro = "unif", M = 10)
+run.onceFit(p =6, n =2000, distro = "gauss", M = 10)
+run.onceFit(p =6, n =10000, distro = "gauss", M = 10)
+run.onceFit(p =6, n =10000, distro = "laplace", M = 10)
+run.onceFit(p =6, n =10000, distro = "unif", M = 10)
+###############
+run.onceFit <- function(p, n, distro, parent_prob = 1/3, h = 1, M = 50){
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob, funcType = "poly",
+M = M, dist = distro, lowScale = 1/5, highScale = sqrt(2)/5,
+noParentMult = 5)
+Y <- scale(out$Y)
+outcome <- cdcs::samplePoly(Y[, 2], M = M)$f + cdcs::samplePoly(Y[, 4], M = M)$f
+outcome <- outcome / 2
+finaloutcome <- outcome + rnorm(n, 1/5)
+### Splines ###
+m.list <- c(3, 5, 10, 15)
+recSplines <- matrix(0, length(m.list), 4)
+for(j in 1:length(m.list)){
+basis <- matrix(0, n, 0)
+for(k in 1:p){
+basis <- cbind(basis, splines::bs(Y[,k], df = m.list[j]))
+}
+noiseless <- lm(outcome~ basis)
+noisy <- lm(finaloutcome~ basis)
+recSplines[j, ] <- c(mean(abs(noiseless$res)), max(abs(noiseless$res)),
+mean(abs(outcome - noisy$fit)), max(abs(outcome - noisy$fit)))
+}
+recSplines <- data.frame(type = rep("S", length(m.list)), M = m.list, recSplines)
+names(recSplines)[-(1:2)] <- c("mean", "max", "meanNoise", "maxNoise")
+### Poly ###
+m.list <- c(3, 4, 5)
+recPoly <- matrix(0, length(m.list), 4)
+for(j in 1:length(m.list)){
+basis <- matrix(0, n, 0)
+for(k in 1:p){
+basis <- cbind(basis, cdcs::getHermite(Y[,k], m.list[j]))
+}
+noiseless <- lm(outcome~ basis)
+noisy <- lm(finaloutcome~ basis)
+recPoly[j, ] <- c(mean(abs(noiseless$res)), max(abs(noiseless$res)),
+mean(abs(outcome - noisy$fit)), max(abs(outcome - noisy$fit)))
+}
+recPoly <- data.frame(type = rep("P", length(m.list)), M = m.list, recPoly)
+names(recPoly)[-(1:2)] <- c("mean", "max", "meanNoise", "maxNoise")
+rec <- rbind(recSplines, recPoly)
+return(rec)
+}
+run.onceFit(p =6, n =10000, distro = "gauss", M = 10)
+run.onceFit(p =6, n =10000, distro = "laplace", M = 10)
+run.onceFit(p =6, n =10000, distro = "unif", M = 10)
+run.onceFit(p =6, n =50000, distro = "gauss", M = 10)
+run.onceFit(p =6, n =50000, distro = "laplace", M = 10)
+run.onceFit(p =6, n =50000, distro = "unif", M = 10)
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob, funcType = "poly",
+M = M, dist = distro, lowScale = 1/5, highScale = sqrt(2)/5,
+noParentMult = 5)
+p <- 6
+n <- 10000
+distro
+distro <- "gauss"
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob, funcType = "poly",
+M = M, dist = distro, lowScale = 1/5, highScale = sqrt(2)/5,
+noParentMult = 5)
+parent_prob <- 1/3
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob, funcType = "poly",
+M = M, dist = distro, lowScale = 1/5, highScale = sqrt(2)/5,
+noParentMult = 5)
+M <- 10
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob, funcType = "poly",
+M = M, dist = distro, lowScale = 1/5, highScale = sqrt(2)/5,
+noParentMult = 5)
+Y <- scale(out$Y)
+outcome <- cdcs::samplePoly(Y[, 2], M = M)$f + cdcs::samplePoly(Y[, 4], M = M)$f
+outcome <- outcome / 2
+finaloutcome <- outcome + rnorm(n, 1/5)
+M <- 5
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob, funcType = "poly",
+M = M, dist = distro, lowScale = 1/5, highScale = sqrt(2)/5,
+noParentMult = 5)
+Y <- scale(out$Y)
+outcome <- cdcs::samplePoly(Y[, 2], M = M)$f + cdcs::samplePoly(Y[, 4], M = M)$f
+outcome <- outcome / 2
+finaloutcome <- outcome + rnorm(n, 1/5)
+j <- 3
+m.list <- c(3, 5, 10, 15)
+basis <- matrix(0, n, 0)
+basis <- matrix(0, n, 0)
+for(k in 1:p){
+basis <- cbind(basis, splines::bs(Y[,k], df = m.list[j]))
+}
+dim(basis)
+noiseless <- lm(outcome~ basis)
+noiseless
+noiseless$residuals
+max(abs(noiseless$residuals))
+mean(abs(noiseless$residuals))
+rnorm
+rnorm(n, 1/5)
+mean(rnorm(n, 1/5))
+mean(rnorm(n, 1/5))
+run.onceFit <- function(p, n, distro, parent_prob = 1/3, h = 1, M = 50){
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob, funcType = "poly",
+M = M, dist = distro, lowScale = 1/5, highScale = sqrt(2)/5,
+noParentMult = 5)
+Y <- scale(out$Y)
+outcome <- cdcs::samplePoly(Y[, 2], M = M)$f + cdcs::samplePoly(Y[, 4], M = M)$f
+outcome <- outcome / 2
+finaloutcome <- outcome + rnorm(n, mean = 0, 1/5)
+### Splines ###
+m.list <- c(3, 5, 10, 15)
+recSplines <- matrix(0, length(m.list), 4)
+for(j in 1:length(m.list)){
+basis <- matrix(0, n, 0)
+for(k in 1:p){
+basis <- cbind(basis, splines::bs(Y[,k], df = m.list[j]))
+}
+noiseless <- lm(outcome~ basis)
+noisy <- lm(finaloutcome~ basis)
+recSplines[j, ] <- c(mean(abs(noiseless$res)), max(abs(noiseless$res)),
+mean(abs(outcome - noisy$fit)), max(abs(outcome - noisy$fit)))
+}
+recSplines <- data.frame(type = rep("S", length(m.list)), M = m.list, recSplines)
+names(recSplines)[-(1:2)] <- c("mean", "max", "meanNoise", "maxNoise")
+### Poly ###
+m.list <- c(3, 4, 5)
+recPoly <- matrix(0, length(m.list), 4)
+for(j in 1:length(m.list)){
+basis <- matrix(0, n, 0)
+for(k in 1:p){
+basis <- cbind(basis, cdcs::getHermite(Y[,k], m.list[j]))
+}
+noiseless <- lm(outcome~ basis)
+noisy <- lm(finaloutcome~ basis)
+recPoly[j, ] <- c(mean(abs(noiseless$res)), max(abs(noiseless$res)),
+mean(abs(outcome - noisy$fit)), max(abs(outcome - noisy$fit)))
+}
+recPoly <- data.frame(type = rep("P", length(m.list)), M = m.list, recPoly)
+names(recPoly)[-(1:2)] <- c("mean", "max", "meanNoise", "maxNoise")
+rec <- rbind(recSplines, recPoly)
+return(rec)
+}
+run.onceFit(p =6, n =1000, distro = "gauss", M = 10)
+run.onceFit(p =6, n =1000, distro = "laplace", M = 10)
+run.onceFit(p =6, n =1000, distro = "unif", M = 10)
+library(cdcs)
+runInd <- 1
+args <- commandArgs(TRUE)
+for(i in 1:length(args)){
+eval(parse(text = args[[i]]))
+}
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob, funcType = "poly",
+M = 100, dist = distro, lowScale = 1/5, highScale = sqrt(2)/5,
+noParentMult = 5)
+Y <- out$Y
+outcome <- cdcs::drawGP(Y[, 2], h = h) + cdcs::drawGP(Y[, 4], h = h)
+h
+run.onceFit <- function(p, n, distro, parent_prob = 1/3, h = 1, M = 50, funcType = "GP"){
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob, funcType = funcType,
+M = M, h = h, dist = distro, lowScale = 1/5, highScale = sqrt(2)/5,
+noParentMult = 5)
+Y <- out$Y
+if(funcType == "GP"){
+outcome <- cdcs::drawGP(Y[, 2], h = h) + cdcs::drawGP(Y[, 4], h = h)
+outcome <- outcome / 2
+} else if(funcType == "poly") {
+outcome <- cdcs::samplePoly(Y[, 2], M = M) + cdcs::samplePoly(Y[, 4], M = M)
+outcome <- outcome / 2
+}
+finaloutcome <- outcome + rnorm(n,mean =0, sd =  1/5)
+### Splines ###
+m.list <- c(3, 5, 10, 15)
+recSplines <- matrix(0, length(m.list), 4)
+for(j in 1:length(m.list)){
+basis <- matrix(0, n, 0)
+for(k in 1:p){
+basis <- cbind(basis, splines::bs(Y[,k], df = m.list[j]))
+}
+noiseless <- lm(outcome~ basis)
+noisy <- lm(finaloutcome~ basis)
+recSplines[j, ] <- c(mean(abs(noiseless$res)), max(abs(noiseless$res)),
+mean(abs(outcome - noisy$fit)), max(abs(outcome - noisy$fit)))
+}
+recSplines <- data.frame(type = rep("S", length(m.list)), M = m.list, recSplines)
+names(recSplines)[-(1:2)] <- c("mean", "max", "meanNoise", "maxNoise")
+### Poly ###
+m.list <- c(3, 4, 5, 7 ,10)
+recPoly <- matrix(0, length(m.list), 4)
+for(j in 1:length(m.list)){
+basis <- matrix(0, n, 0)
+for(k in 1:p){
+basis <- cbind(basis, poly(Y[,k], m.list[j]))
+}
+noiseless <- lm(outcome~ basis)
+noisy <- lm(finaloutcome~ basis)
+recPoly[j, ] <- c(mean(abs(noiseless$res)), max(abs(noiseless$res)),
+mean(abs(outcome - noisy$fit)), max(abs(outcome - noisy$fit)))
+}
+recPoly <- data.frame(type = rep("P", length(m.list)), M = m.list, recPoly)
+names(recPoly)[-(1:2)] <- c("mean", "max", "meanNoise", "maxNoise")
+rec <- rbind(recSplines, recPoly)
+return(rec)
+}
+run.onceFit(p =6, n =1000, distro = "gauss", funcType = "GP", h = 1)
+run.onceFit(p =6, n =1000, distro = "laplace", h = 1)
+run.onceFit(p =6, n =1000, distro = "unif", h = 1)
+run.onceFit(p =6, n =1000, distro = "gauss", funcType = "GP", h = 1)
+run.onceFit(p =6, n =1000, distro = "laplace", h = 1)
+run.onceFit(p =6, n =1000, distro = "unif", h = 1)
+run.onceFit(p =6, n =1000, distro = "gauss", funcType = "GP", h = 2)
+run.onceFit(p =6, n =1000, distro = "laplace", h = 2)
+run.onceFit(p =6, n =1000, distro = "unif", h = 2)
+run.onceFit(p =6, n =5000, distro = "gauss", funcType = "GP", h = 2)
+run.onceFit(p =6, n =5000, distro = "laplace", h = 2)
+run.onceFit(p =6, n =5000, distro = "unif", h = 2)
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = 1/3, funcType = "poly", M = M, dist = distro)
+Y <- scale(out$Y)
+run.onceBnb <- function(p, n, distro, bs = 400, parent_prob = 1/3, K = 4,
+funcType = "GP", h = 1, M= 10, basis = "bsplines"){
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = 1/3, funcType = funcType, M = M, h = h,
+dist = distro)
+Y <- out$Y
+m.list <- c(round(M/4), round(M/2), round(3 * M / 4))
+rec <- matrix(0, length(m.list), 4)
+colnames(rec) <- c("size", "cover", "ancest", "time")
+G <- array(0, dim = c(n, 2*K, p))
+for(j in 1:p){
+for(k in 1:K){
+# G[, 2 * k -1, j] <- pmax(0, Y[,j])^K
+# G[, 2 * k, j] <- pmin(0, Y[,j])^K
+G[, 2 * k -1, j] <- sin(Y[,j]* k / 2)
+G[, 2 * k, j] <- cos(Y[,j] *k / 2)
+}
+}
+G <- scale(G)
+for(j in 1:length(m.list)){
+time.rec <- system.time(out <- cdcs::brandAndBound_anm(Y, G, bs =bs, withinAgg = 2,
+aggType = 2, alpha = .1,
+pValueAgg = "tippet",
+intercept = 1, verbose = F, basis = basis, M = m.list[j]))[3]
+rec[j, ] <- c(sum(out$pValue > .1), all(out[1, -1] == 1:p),
+mean(cdcs::getAncest(out[which(out$pValue > .1),-1])[lower.tri(matrix(0, p,p))] == 1 ), time.rec)
+}
+return(rec)
+}
+sample.size <- 200
+rep.runs <- 10
+n.list <- c(2000)
+d.list <- c("gauss", "unif", "laplace")
+h.list <- c(1, 3)
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list, h.list)
+funcType <- "GP"
+p <- 6
+n <- param.grid[runInd, 1]
+param.grid
+sample.size <- 200
+rep.runs <- 5
+n.list <- c(2000)
+d.list <- c("gauss", "unif", "laplace", "gamma")
+h.list <- c(1, 3)
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list, h.list)
+param.grid
+sample.size <- 200
+rep.runs <- 5
+n.list <- c(2000)
+d.list <- c("gauss", "unif", "laplace", "gamma")
+h.list <- c(1, 3)
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list, h.list)
+param.grid
+sample.size <- 200
+rep.runs <- 5
+n.list <- c(2000)
+d.list <- c("gauss", "unif", "laplace", "gamma")
+h.list <- c(1, 3)
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list, h.list)
+runInd <- 1
+outTab <- read.csv(paste("~/Dropbox/confSetGraphs/code/rPkg/simResults/nl/nl_exp_",runInd, ".csv", sep = ""))[,-1]
+missing <- c()
+for(runInd in 2:nrow(param.grid)){
+if(file.exists(paste("~/Dropbox/confSetGraphs/code/rPkg/simResults/nl/nl_exp_",runInd, ".csv", sep = ""))){
+temp <- read.csv(paste("~/Dropbox/confSetGraphs/code/rPkg/simResults/nl/nl_exp_",runInd, ".csv", sep = ""))[,-1]
+outTab <- rbind(outTab, temp)
+} else {
+missing <- c(missing, runInd)
+}
+}
+outTab
+resTab <- aggregate(cbind(size, cover, ancest, time) ~ distro + h + testFunc, dat = outTab, FUN = mean)
+resTab
+resTab[,3] <- resTab[,3] / factorial(6)
+resTab[,3]
+resTab <- aggregate(cbind(size, cover, ancest, time) ~ distro + h + testFunc, dat = outTab, FUN = mean)
+resTab[, 4] <- resTab[, 4] / factorial(6)
+resTab
+outTab
+resTab <- aggregate(cbind(size, cover, ancest, time) ~ distro + h + testFunc + m, dat = outTab, FUN = mean)
+resTab[, 4] <- resTab[, 4] / factorial(6)
+resTab
+resTab <- aggregate(cbind(size, cover, ancest, time) ~ distro + h + testFunc + m, dat = outTab, FUN = mean)
+resTab$size <- resTab$size / factorial(6)
+resTab
+resTab <- aggregate(cbind(size, cover, ancest, time) ~ testFunc + h + distro + m, dat = outTab, FUN = mean)
+resTab$size <- resTab$size / factorial(6)
+resTab

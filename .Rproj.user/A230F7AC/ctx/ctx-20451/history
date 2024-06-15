@@ -1,0 +1,512 @@
+outTab <- rbind(outTab, out)
+cat(runInd)
+}
+sample.size <- 100
+rep.runs <- 20
+n.list <- c(250, 500, 1000)
+d.list <- c("unif", "lognorm", "gamma", "weibull", "laplace")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list)
+### Param grid Size 400
+p <- 8
+# cl <- makeCluster(3)
+# clusterExport(cl, ls())
+outTab <- data.frame(p = NULL, n = NULL, distro = NULL, pointEst = NULL)
+for(runInd in 1:dim(param.grid)[1]){
+n <- param.grid[runInd, 1]
+distro <- param.grid[runInd, 2]
+# clusterExport(cl, ls())
+out <- sapply(1:rep.runs, function(x){run.onceBnb(p, n, distro)})
+outTab <- rbind(outTab, out)
+cat(runInd)
+}
+sample.size <- 50
+rep.runs <- 25
+n.list <- c(250, 500, 1000)
+d.list <- c("unif", "lognorm", "gamma", "weibull", "laplace")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list)
+### Param grid Size 400
+### Param grid Size 400
+dim(param.grid)
+sample.size <- 50
+rep.runs <- 25
+n.list <- c(250, 500, 1000)
+d.list <- c("unif", "lognorm", "gamma", "weibull", "laplace")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list)
+### Param grid Size 400
+dim(param.grid)
+p <- 8
+# cl <- makeCluster(3)
+# clusterExport(cl, ls())
+outTab <- data.frame(p = NULL, n = NULL, distro = NULL, pointEst = NULL)
+for(runInd in 1:dim(param.grid)[1]){
+n <- param.grid[runInd, 1]
+distro <- param.grid[runInd, 2]
+# clusterExport(cl, ls())
+out <- sapply(1:rep.runs, function(x){run.onceBnb(p, n, distro)})
+outTab <- rbind(outTab, out)
+cat(runInd)
+}
+aggregate(pointEst ~ p + n + distro, dat = outTab, FUN = mean)
+outTab
+out
+##################
+library(parallel)
+library(cdcs)
+sample.size <- 50
+rep.runs <- 25
+n.list <- c(250, 500, 1000)
+d.list <- c("unif", "lognorm", "gamma", "weibull", "laplace")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list)
+### Param grid Size 400
+dim(param.grid)
+p <- 8
+# cl <- makeCluster(3)
+# clusterExport(cl, ls())
+outTab <- data.frame(p = NULL, n = NULL, distro = NULL, pointEst = NULL)
+for(runInd in 1:dim(param.grid)[1]){
+n <- param.grid[runInd, 1]
+distro <- param.grid[runInd, 2]
+# clusterExport(cl, ls())
+out <- t(sapply(1:rep.runs, function(x){run.onceBnb(p, n, distro)}))
+outTab <- rbind(outTab, out)
+cat(runInd)
+}
+aggregate(pointEst ~ p + n + distro, dat = outTab, FUN = mean)
+outTab
+aggregate(pointEst ~ p + n + distro, dat = outTab, FUN = mean)
+pointEst
+colnames(outTab)
+aggregate(pointEst == T ~ p + n + distro, dat = outTab, FUN = mean)
+aggregate(pointEst == T ~ p + n + distro, dat = outTab, FUN = mean)
+aggregate(pointEst ~ p + n + distro, dat = outTab, FUN = mean)
+as.matrix(outTab)
+aggregate(pointEst ~ p + n + distro, dat = as.matrix(outTab), FUN = mean)
+aggregate(pointEst + 0 ~ p + n + distro, dat = as.matrix(outTab), FUN = mean)
+outTab$pointEst <- outTab$pointEst + 0
+colnames(outTab)
+aggregate(pointEst ~ p + n + distro, dat = as.matrix(outTab), FUN = mean)
+outTab <- as.matrix(outTab)
+outTab$pointEst <- outTab$pointEst + 0
+colnames(outTab)
+outTab
+run.onceBnb <- function(p, n, distro, bs = 200, parent_prob = 1/3, verbose = F,
+cutoff = NULL, K = c(3)){
+dat <- cdcs::rDAG(p, n, parent_prob = parent_prob, lowScale = .8,
+highScale = 1, lowEdge = 1/4 * n^(-1/8), highEdge =  n^(-1/8),
+dist = distro, uniqueTop = T)
+Y <- scale(dat$Y)
+outlingamDirect <- causalXtreme::direct_lingam_search(Y)
+rec <- c(p, n, as.character(distro), all(outlingamDirect == 1:p))
+names(rec) <- c("p", "n", "distro", "pointEst")
+return(rec)
+}
+outTab$pointEst
+outTab
+run.onceBnb <- function(p, n, distro, bs = 200, parent_prob = 1/3, verbose = F,
+cutoff = NULL, K = c(3)){
+dat <- cdcs::rDAG(p, n, parent_prob = parent_prob, lowScale = .8,
+highScale = 1, lowEdge = 1/4 * n^(-1/8), highEdge =  n^(-1/8),
+dist = distro, uniqueTop = T)
+Y <- scale(dat$Y)
+outlingamDirect <- causalXtreme::direct_lingam_search(Y)
+rec <- c(p, n, as.character(distro), all(outlingamDirect == 1:p))
+names(rec) <- c("p", "n", "distro", "pointEst")
+return(rec)
+}
+##################
+library(parallel)
+library(cdcs)
+sample.size <- 50
+rep.runs <- 25
+n.list <- c(250, 500, 1000)
+d.list <- c("unif", "lognorm", "gamma", "weibull", "laplace")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list)
+### Param grid Size 400
+dim(param.grid)
+p <- 8
+# cl <- makeCluster(3)
+# clusterExport(cl, ls())
+outTab <- data.frame(p = NULL, n = NULL, distro = NULL, pointEst = NULL)
+for(runInd in 1:dim(param.grid)[1]){
+n <- param.grid[runInd, 1]
+distro <- param.grid[runInd, 2]
+# clusterExport(cl, ls())
+out <- t(sapply(1:rep.runs, function(x){run.onceBnb(p, n, distro)}))
+outTab <- rbind(outTab, out)
+cat(runInd)
+}
+outTab
+outTab
+aggregate(pointEst ~ p + n + distro, dat = as.matrix(outTab), FUN = mean)
+outTab$pointEst <- outTab$pointEst + 1
+outTab$pointEst <- outTab$pointEst + 0
+outTab$pointEst
+aggregate(pointEst == "TRUE" ~ p + n + distro, dat = as.matrix(outTab), FUN = mean)
+runInd <- 1
+args <- commandArgs(TRUE)
+for(i in 1:length(args)){
+eval(parse(text = args[[i]]))
+}
+print(runInd)
+run.onceBnb <- function(p, n, distro, bs = 200, parent_prob = 1/3, verbose = F,
+cutoff = NULL, K = c(3)){
+dat <- cdcs::rDAG(p, n, parent_prob = parent_prob, lowScale = .8,
+highScale = 1, lowEdge = 1/8 * n^(-1/8), highEdge =  3/4 * n^(-1/8),
+dist = distro, uniqueTop = T)
+Y <- scale(dat$Y)
+outlingamDirect <- causalXtreme::direct_lingam_search(Y)
+rec <- c(p, n, as.character(distro), all(outlingamDirect == 1:p))
+names(rec) <- c("p", "n", "distro", "pointEst")
+return(rec)
+}
+##################
+library(parallel)
+library(cdcs)
+sample.size <- 50
+rep.runs <- 25
+n.list <- c(250, 500, 1000)
+d.list <- c("unif", "lognorm", "gamma", "weibull", "laplace")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list)
+### Param grid Size 400
+dim(param.grid)
+p <- 8
+# cl <- makeCluster(3)
+# clusterExport(cl, ls())
+outTab <- data.frame(p = NULL, n = NULL, distro = NULL, pointEst = NULL)
+for(runInd in 1:dim(param.grid)[1]){
+n <- param.grid[runInd, 1]
+distro <- param.grid[runInd, 2]
+# clusterExport(cl, ls())
+out <- t(sapply(1:rep.runs, function(x){run.onceBnb(p, n, distro)}))
+outTab <- rbind(outTab, out)
+cat(runInd)
+}
+outTab$pointEst
+aggregate(pointEst == "TRUE" ~ p + n + distro, dat = as.matrix(outTab), FUN = mean)
+cdcs::rDAG
+runInd <- 1
+args <- commandArgs(TRUE)
+for(i in 1:length(args)){
+eval(parse(text = args[[i]]))
+}
+print(runInd)
+run.onceBnb <- function(p, n, distro, bs = 200, parent_prob = 1/3, verbose = F,
+cutoff = NULL, K = c(3)){
+dat <- cdcs::rDAG(p, n, parent_prob = parent_prob, lowScale = .8,
+highScale = 1, edgeVar =n^(-1/8),
+dist = distro, uniqueTop = T)
+Y <- scale(dat$Y)
+outlingamDirect <- causalXtreme::direct_lingam_search(Y)
+rec <- c(p, n, as.character(distro), all(outlingamDirect == 1:p))
+names(rec) <- c("p", "n", "distro", "pointEst")
+return(rec)
+}
+##################
+library(parallel)
+library(cdcs)
+sample.size <- 50
+rep.runs <- 25
+n.list <- c(250, 500, 1000)
+d.list <- c("unif", "lognorm", "gamma", "weibull", "laplace")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list)
+### Param grid Size 400
+dim(param.grid)
+p <- 8
+# cl <- makeCluster(3)
+# clusterExport(cl, ls())
+outTab <- data.frame(p = NULL, n = NULL, distro = NULL, pointEst = NULL)
+for(runInd in 1:dim(param.grid)[1]){
+n <- param.grid[runInd, 1]
+distro <- param.grid[runInd, 2]
+# clusterExport(cl, ls())
+out <- t(sapply(1:rep.runs, function(x){run.onceBnb(p, n, distro)}))
+outTab <- rbind(outTab, out)
+cat(runInd)
+}
+outTab$pointEst
+aggregate(pointEst == "TRUE" ~ p + n + distro, dat = as.matrix(outTab), FUN = mean)
+runInd <- 1
+args <- commandArgs(TRUE)
+for(i in 1:length(args)){
+eval(parse(text = args[[i]]))
+}
+print(runInd)
+run.onceBnb <- function(p, n, distro, bs = 200, parent_prob = 1/3, verbose = F,
+cutoff = NULL, K = c(3)){
+dat <- cdcs::rDAG(p, n, parent_prob = parent_prob, lowScale = .8,
+highScale = 1, edgeVar =n^(-1/8),
+dist = distro, uniqueTop = T)
+Y <- scale(dat$Y)
+outlingamDirect <- causalXtreme::direct_lingam_search(Y)
+rec <- c(p, n, as.character(distro), all(outlingamDirect == 1:p))
+names(rec) <- c("p", "n", "distro", "pointEst")
+return(rec)
+}
+##################
+library(parallel)
+library(cdcs)
+sample.size <- 50
+rep.runs <- 25
+n.list <- c(250, 500, 1000)
+d.list <- c("unif", "lognorm", "gamma", "weibull", "laplace")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list)
+### Param grid Size 400
+dim(param.grid)
+p <- 8
+# cl <- makeCluster(3)
+# clusterExport(cl, ls())
+outTab <- data.frame(p = NULL, n = NULL, distro = NULL, pointEst = NULL)
+for(runInd in 1:dim(param.grid)[1]){
+n <- param.grid[runInd, 1]
+distro <- param.grid[runInd, 2]
+# clusterExport(cl, ls())
+out <- t(sapply(1:rep.runs, function(x){run.onceBnb(p, n, distro)}))
+outTab <- rbind(outTab, out)
+cat(runInd)
+}
+outTab$pointEst
+aggregate(pointEst == "TRUE" ~ p + n + distro, dat = as.matrix(outTab), FUN = mean)
+runInd <- 1
+args <- commandArgs(TRUE)
+for(i in 1:length(args)){
+eval(parse(text = args[[i]]))
+}
+print(runInd)
+run.onceBnb <- function(p, n, distro, bs = 200, parent_prob = 1/3, verbose = F,
+cutoff = NULL, K = c(3)){
+dat <- cdcs::rDAG(p, n, parent_prob = parent_prob, lowScale = .8,
+highScale = 1, edgeVar =n^(-1/4),
+dist = distro, uniqueTop = T)
+Y <- scale(dat$Y)
+outlingamDirect <- causalXtreme::direct_lingam_search(Y)
+rec <- c(p, n, as.character(distro), all(outlingamDirect == 1:p))
+names(rec) <- c("p", "n", "distro", "pointEst")
+return(rec)
+}
+##################
+library(parallel)
+library(cdcs)
+sample.size <- 50
+rep.runs <- 25
+n.list <- c(250, 500, 1000)
+d.list <- c("unif", "lognorm", "gamma", "weibull", "laplace")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list)
+### Param grid Size 400
+dim(param.grid)
+p <- 8
+# cl <- makeCluster(3)
+# clusterExport(cl, ls())
+outTab <- data.frame(p = NULL, n = NULL, distro = NULL, pointEst = NULL)
+for(runInd in 1:dim(param.grid)[1]){
+n <- param.grid[runInd, 1]
+distro <- param.grid[runInd, 2]
+# clusterExport(cl, ls())
+out <- t(sapply(1:rep.runs, function(x){run.onceBnb(p, n, distro)}))
+outTab <- rbind(outTab, out)
+cat(runInd)
+}
+outTab$pointEst
+aggregate(pointEst == "TRUE" ~ p + n + distro, dat = as.matrix(outTab), FUN = mean)
+runInd <- 1
+args <- commandArgs(TRUE)
+for(i in 1:length(args)){
+eval(parse(text = args[[i]]))
+}
+print(runInd)
+run.onceBnb <- function(p, n, distro, bs = 200, parent_prob = 1/3, verbose = F,
+cutoff = NULL, K = c(3)){
+dat <- cdcs::rDAG(p, n, parent_prob = parent_prob, lowScale = .8,
+highScale = 1, edgeVar =n^(-1/6),
+dist = distro, uniqueTop = T)
+Y <- scale(dat$Y)
+outlingamDirect <- causalXtreme::direct_lingam_search(Y)
+rec <- c(p, n, as.character(distro), all(outlingamDirect == 1:p))
+names(rec) <- c("p", "n", "distro", "pointEst")
+return(rec)
+}
+##################
+library(parallel)
+library(cdcs)
+sample.size <- 50
+rep.runs <- 25
+n.list <- c(250, 500, 1000)
+d.list <- c("unif", "lognorm", "gamma", "weibull", "laplace")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list)
+### Param grid Size 400
+dim(param.grid)
+p <- 8
+# cl <- makeCluster(3)
+# clusterExport(cl, ls())
+outTab <- data.frame(p = NULL, n = NULL, distro = NULL, pointEst = NULL)
+for(runInd in 1:dim(param.grid)[1]){
+n <- param.grid[runInd, 1]
+distro <- param.grid[runInd, 2]
+# clusterExport(cl, ls())
+out <- t(sapply(1:rep.runs, function(x){run.onceBnb(p, n, distro)}))
+outTab <- rbind(outTab, out)
+cat(runInd)
+}
+outTab$pointEst
+aggregate(pointEst == "TRUE" ~ p + n + distro, dat = as.matrix(outTab), FUN = mean)
+runInd <- 1
+args <- commandArgs(TRUE)
+for(i in 1:length(args)){
+eval(parse(text = args[[i]]))
+}
+print(runInd)
+run.onceBnb <- function(p, n, distro, bs = 200, parent_prob = 1/3, verbose = F,
+cutoff = NULL, K = c(3)){
+dat <- cdcs::rDAG(p, n, parent_prob = parent_prob, lowScale = .8,
+highScale = 1, edgeVar = 2 * n^(-1/6),
+dist = distro, uniqueTop = T)
+Y <- scale(dat$Y)
+outlingamDirect <- causalXtreme::direct_lingam_search(Y)
+rec <- c(p, n, as.character(distro), all(outlingamDirect == 1:p))
+names(rec) <- c("p", "n", "distro", "pointEst")
+return(rec)
+}
+##################
+library(parallel)
+library(cdcs)
+sample.size <- 50
+rep.runs <- 25
+n.list <- c(250, 500, 1000)
+d.list <- c("unif", "lognorm", "gamma", "weibull", "laplace")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list)
+### Param grid Size 400
+dim(param.grid)
+p <- 8
+# cl <- makeCluster(3)
+# clusterExport(cl, ls())
+outTab <- data.frame(p = NULL, n = NULL, distro = NULL, pointEst = NULL)
+for(runInd in 1:dim(param.grid)[1]){
+n <- param.grid[runInd, 1]
+distro <- param.grid[runInd, 2]
+# clusterExport(cl, ls())
+out <- t(sapply(1:rep.runs, function(x){run.onceBnb(p, n, distro)}))
+outTab <- rbind(outTab, out)
+cat(runInd)
+}
+outTab$pointEst
+aggregate(pointEst == "TRUE" ~ p + n + distro, dat = as.matrix(outTab), FUN = mean)
+runInd <- 1
+args <- commandArgs(TRUE)
+for(i in 1:length(args)){
+eval(parse(text = args[[i]]))
+}
+print(runInd)
+run.onceBnb <- function(p, n, distro, bs = 200, parent_prob = 1/3, verbose = F,
+cutoff = NULL, K = c(3)){
+dat <- cdcs::rDAG(p, n, parent_prob = parent_prob, lowScale = .8,
+highScale = 1, edgeVar = 2 * n^(-1/4),
+dist = distro, uniqueTop = T)
+Y <- scale(dat$Y)
+outlingamDirect <- causalXtreme::direct_lingam_search(Y)
+rec <- c(p, n, as.character(distro), all(outlingamDirect == 1:p))
+names(rec) <- c("p", "n", "distro", "pointEst")
+return(rec)
+}
+##################
+library(parallel)
+library(cdcs)
+sample.size <- 50
+rep.runs <- 25
+n.list <- c(250, 500, 1000)
+d.list <- c("unif", "lognorm", "gamma", "weibull", "laplace")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list)
+### Param grid Size 400
+dim(param.grid)
+p <- 8
+# cl <- makeCluster(3)
+# clusterExport(cl, ls())
+outTab <- data.frame(p = NULL, n = NULL, distro = NULL, pointEst = NULL)
+for(runInd in 1:dim(param.grid)[1]){
+n <- param.grid[runInd, 1]
+distro <- param.grid[runInd, 2]
+# clusterExport(cl, ls())
+out <- t(sapply(1:rep.runs, function(x){run.onceBnb(p, n, distro)}))
+outTab <- rbind(outTab, out)
+cat(runInd)
+}
+outTab$pointEst
+aggregate(pointEst == "TRUE" ~ p + n + distro, dat = as.matrix(outTab), FUN = mean)
+runInd <- 1
+args <- commandArgs(TRUE)
+for(i in 1:length(args)){
+eval(parse(text = args[[i]]))
+}
+print(runInd)
+run.onceBnb <- function(p, n, distro, bs = 200, parent_prob = 1/3, verbose = F,
+cutoff = NULL, K = c(3)){
+dat <- cdcs::rDAG(p, n, parent_prob = parent_prob, lowScale = .8,
+highScale = 1, edgeVar = 2 * n^(-1/4),
+dist = distro, uniqueTop = T)
+Y <- scale(dat$Y, scale = F)
+outlingamDirect <- causalXtreme::direct_lingam_search(Y)
+rec <- c(p, n, as.character(distro), all(outlingamDirect == 1:p))
+names(rec) <- c("p", "n", "distro", "pointEst")
+return(rec)
+}
+##################
+library(parallel)
+library(cdcs)
+sample.size <- 50
+rep.runs <- 25
+n.list <- c(250, 500, 1000)
+d.list <- c("unif", "lognorm", "gamma", "weibull", "laplace")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list)
+### Param grid Size 400
+dim(param.grid)
+p <- 8
+# cl <- makeCluster(3)
+# clusterExport(cl, ls())
+outTab <- data.frame(p = NULL, n = NULL, distro = NULL, pointEst = NULL)
+for(runInd in 1:dim(param.grid)[1]){
+n <- param.grid[runInd, 1]
+distro <- param.grid[runInd, 2]
+# clusterExport(cl, ls())
+out <- t(sapply(1:rep.runs, function(x){run.onceBnb(p, n, distro)}))
+outTab <- rbind(outTab, out)
+cat(runInd)
+}
+outTab$pointEst
+aggregate(pointEst == "TRUE" ~ p + n + distro, dat = as.matrix(outTab), FUN = mean)
+runInd <- 1
+args <- commandArgs(TRUE)
+for(i in 1:length(args)){
+eval(parse(text = args[[i]]))
+}
+print(runInd)
+run.onceBnb <- function(p, n, distro, bs = 200, parent_prob = 1/3, verbose = F,
+cutoff = NULL, K = c(3)){
+dat <- cdcs::rDAG(p, n, parent_prob = parent_prob, lowScale = .8,
+highScale = 1, edgeVar = 2 * n^(-1/8),
+dist = distro, uniqueTop = T)
+Y <- scale(dat$Y, scale = T)
+outlingamDirect <- causalXtreme::direct_lingam_search(Y)
+rec <- c(p, n, as.character(distro), all(outlingamDirect == 1:p))
+names(rec) <- c("p", "n", "distro", "pointEst")
+return(rec)
+}
+##################
+library(parallel)
+library(cdcs)
+sample.size <- 50
+rep.runs <- 25
+n.list <- c(250, 500, 1000)
+d.list <- c("unif", "lognorm", "gamma", "weibull", "laplace")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list)
+### Param grid Size 400
+dim(param.grid)
+p <- 8
+# cl <- makeCluster(3)
+# clusterExport(cl, ls())
+outTab <- data.frame(p = NULL, n = NULL, distro = NULL, pointEst = NULL)
+for(runInd in 1:dim(param.grid)[1]){
+n <- param.grid[runInd, 1]
+distro <- param.grid[runInd, 2]
+# clusterExport(cl, ls())
+out <- t(sapply(1:rep.runs, function(x){run.onceBnb(p, n, distro)}))
+outTab <- rbind(outTab, out)
+cat(runInd)
+}

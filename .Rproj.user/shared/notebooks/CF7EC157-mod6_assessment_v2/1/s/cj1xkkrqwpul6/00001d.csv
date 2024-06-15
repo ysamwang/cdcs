@@ -1,0 +1,5 @@
+"0","# fit the lasso (alph = 1 indicates lasso) with a poisson family   "
+"0","lasso_mod <- glmnet::cv.glmnet(y = bike_data_train$bike_counts,"
+"0","                               x = as.matrix(bike_data_train[, -c(1,2)]),"
+"0","                               alpha = 1, family = ""poisson"")"
+"0","plot(lasso_mod)"

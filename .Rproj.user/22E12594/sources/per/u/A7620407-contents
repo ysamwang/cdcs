@@ -1,0 +1,6 @@
+n <- 500
+p <- 1200
+
+X <- mvtnorm::rmvnorm(n, sigma = diag(p))
+S <- t(X)%*% X / n
+system.time(fastclime::fastclime(S, nlambda = 50))

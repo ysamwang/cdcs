@@ -1,0 +1,512 @@
+n <- 1000
+parent_prob <- 1/3
+funcType <- "fourier"
+Mtrue <- 1
+distro <- "gauss"
+h <- 1
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob,
+funcType = funcType, M = Mtrue, h = h, dist = distro)
+Y <- out$Y
+plot(Y[,1], Y[,2])
+p <- 6
+n <- 1000
+parent_prob <- 1/3
+funcType <- "fourier"
+Mtrue <- 1
+distro <- "gauss"
+h <- 1
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob,
+funcType = funcType, M = Mtrue, h = h, dist = distro)
+Y <- out$Y
+plot(Y[,1], Y[,2])
+p <- 6
+n <- 1000
+parent_prob <- 1/3
+funcType <- "fourier"
+Mtrue <- 1
+distro <- "gauss"
+h <- 1
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob,
+funcType = funcType, M = Mtrue, h = h, dist = distro)
+Y <- out$Y
+plot(Y[,1], Y[,2])
+p <- 6
+n <- 1000
+parent_prob <- 1/3
+funcType <- "fourier"
+Mtrue <- 1
+distro <- "gauss"
+h <- 1
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob,
+funcType = funcType, M = Mtrue, h = h, dist = distro)
+Y <- out$Y
+plot(Y[,1], Y[,2])
+p <- 6
+n <- 1000
+parent_prob <- 1/3
+funcType <- "fourier"
+Mtrue <- 1
+distro <- "gauss"
+h <- 1
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob,
+funcType = funcType, M = Mtrue, h = h, dist = distro)
+Y <- out$Y
+plot(Y[,1], Y[,2])
+p <- 6
+n <- 1000
+parent_prob <- 1/3
+funcType <- "fourier"
+Mtrue <- 1
+distro <- "gauss"
+h <- 1
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob,
+funcType = funcType, M = Mtrue, h = h, dist = distro)
+Y <- out$Y
+plot(Y[,1], Y[,2])
+p <- 6
+n <- 1000
+parent_prob <- 1/3
+funcType <- "fourier"
+Mtrue <- 1
+distro <- "gauss"
+h <- 1
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob,
+funcType = funcType, M = Mtrue, h = h, dist = distro)
+Y <- out$Y
+plot(Y[,1], Y[,2])
+p <- 6
+n <- 1000
+parent_prob <- 1/3
+funcType <- "fourier"
+Mtrue <- 1
+distro <- "gauss"
+h <- 1
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob,
+funcType = funcType, M = Mtrue, h = h, dist = distro)
+Y <- out$Y
+plot(Y[,1], Y[,2])
+p <- 6
+n <- 1000
+parent_prob <- 1/3
+funcType <- "fourier"
+Mtrue <- 1
+distro <- "gauss"
+h <- 1
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob,
+funcType = funcType, M = Mtrue, h = h, dist = distro)
+Y <- out$Y
+plot(Y[,1], Y[,2])
+p <- 6
+n <- 1000
+parent_prob <- 1/3
+funcType <- "fourier"
+Mtrue <- 1
+distro <- "gauss"
+h <- 1
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob,
+funcType = funcType, M = Mtrue, h = h, dist = distro)
+Y <- out$Y
+plot(Y[,1], Y[,2])
+p <- 6
+n <- 1000
+parent_prob <- 1/3
+funcType <- "fourier"
+Mtrue <- 1
+distro <- "gauss"
+h <- 1
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob,
+funcType = funcType, M = Mtrue, h = h, dist = distro)
+Y <- out$Y
+plot(Y[,1], Y[,2])
+sample.size <- 300
+rep.runs <- 15
+n.list <- c(2000)
+d.list <- c("gauss", "unif", "laplace", "gamma")
+func.list <- c("poly", "fourier", "GP")
+basis.list <- c("poly", "bspline")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list, func.list, basis.list)
+param.grid
+library(cdcs)
+run.onceBnb <- function(p, n, distro, bs = 400, parent_prob = 1/4, K = 4,
+funcType = "GP", h = 1, Mtrue= 10, m.list =c(1,2,3),
+basis = "bspline") {
+out <- cdcs::rDAG_anm(p = p, n = n, parent_prob = parent_prob,
+funcType = funcType, M = Mtrue, h = h, dist = distro)
+Y <- out$Y
+# rec <- matrix(0, length(m.list), 5)
+rec <- matrix(0, length(m.list) * 2, 6)
+colnames(rec) <- c("testFunc", "m", "size", "cover", "ancest", "time")
+G1 <- G2 <- array(0, dim = c(n, 2 * K, p) )
+for(j in 1:p){
+for(k in 1:K){
+G1[, 2 * k - 1, j] <- scale(pmax(0, Y[, j])^K)
+G1[, 2 * k, j] <- scale(pmin(0, Y[, j])^K)
+G2[, 2 * k - 1, j] <- scale(sin(Y[, j] * k / 2))
+G2[, 2 * k, j] <- scale(cos(Y[, j] * k / 2))
+}
+}
+for(j in 1:length(m.list)){
+time.rec <- system.time(out <- cdcs::brandAndBound_anm(Y, G1, bs =bs, withinAgg = 2,
+aggType = 2, alpha = .1, pValueAgg = "tippet",
+intercept = 1, verbose = F, basis = basis,
+M = m.list[j]))[3]
+rec[j, ] <- c("G1", m.list[j], sum(out$pValue > .1), all(out[1, -1] == 1:p),
+mean(cdcs::getAncest(out[which(out$pValue > .1),-1])[lower.tri(matrix(0, p,p))] == 1 ),
+time.rec)
+}
+for(j in 1:length(m.list)){
+time.rec <- system.time(out <- cdcs::brandAndBound_anm(Y, G2, bs =bs, withinAgg = 2,
+aggType = 2, alpha = .1, pValueAgg = "tippet",
+intercept = 1, verbose = F, basis = basis,
+M = m.list[j]))[3]
+rec[length(m.list) + j, ] <- c("G2", m.list[j], sum(out$pValue > .1), all(out[1, -1] == 1:p),
+mean(cdcs::getAncest(out[which(out$pValue > .1),-1])[lower.tri(matrix(0, p,p))] == 1 ),
+time.rec)
+}
+return(rec)
+}
+#
+# run.onceBnb(p = 6, n = 1000, distro = "gauss", bs = 400, parent_prob = 1/4, K = 2,
+#             funcType = "GP", h = 1, Mtrue= 10, m.list = c(5,10, 15, 25), basis = "bspline")
+###########################
+library(parallel)
+library(cdcs)
+sample.size <- 300
+rep.runs <- 15
+n.list <- c(2000)
+d.list <- c("gauss", "unif", "laplace", "gamma")
+func.list <- c("poly", "fourier", "GP")
+basis.list <- c("poly", "bspline")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list, func.list, basis.list)
+p <- 6
+n <- param.grid[runInd, 1]
+runInd <- 1
+p <- 6
+n <- param.grid[runInd, 1]
+distro <- param.grid[runInd, 2]
+funcType <- param.grid[runInd, 3]
+h <- 1
+if(funcType == "poly"){
+Mtrue <-  15
+} else {
+Mtrue <- 2
+}
+if(basis == "bspline"){
+m.list <- c(5, 10, 15, 25)
+} else {
+m.list <- c(3, 5, 7, 10)
+}
+param.grid
+sample.size <- 300
+rep.runs <- 15
+n.list <- c(2000)
+d.list <- c("gauss", "unif", "laplace", "gamma")
+func.list <- c("poly", "fourier", "GP")
+basis.list <- c("poly", "bspline")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list, func.list, basis.list)
+#
+#
+#
+#
+#
+#
+runInd <- 1
+outTab <- read.csv(paste("~/Dropbox/confSetGraphs/code/rPkg/simResults/nl/nl_exp_",runInd, ".csv", sep = ""))[,-1]
+missing <- c()
+for(runInd in 2:nrow(param.grid)){
+if(file.exists(paste("~/Dropbox/confSetGraphs/code/rPkg/simResults/nl/nl_exp_",runInd, ".csv", sep = ""))){
+temp <- read.csv(paste("~/Dropbox/confSetGraphs/code/rPkg/simResults/nl/nl_exp_",runInd, ".csv", sep = ""))[,-1]
+outTab <- rbind(outTab, temp)
+} else {
+missing <- c(missing, runInd)
+}
+}
+runInd
+missing
+outTab
+sample.size <- 300
+rep.runs <- 15
+n.list <- c(2000)
+d.list <- c("gauss", "unif", "laplace", "gamma")
+func.list <- c("poly", "fourier", "GP")
+basis.list <- c("poly", "bspline")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list, func.list, basis.list)
+#
+#
+#
+#
+#
+#
+runInd <- 1
+outTab <- read.csv(paste("~/Dropbox/confSetGraphs/code/rPkg/simResults/nl/nl_exp_",runInd, ".csv", sep = ""))[,-1]
+missing <- c()
+for(runInd in 2:nrow(param.grid)){
+if(file.exists(paste("~/Dropbox/confSetGraphs/code/rPkg/simResults/nl/nl_exp_",runInd, ".csv", sep = ""))){
+temp <- read.csv(paste("~/Dropbox/confSetGraphs/code/rPkg/simResults/nl/nl_exp_",runInd, ".csv", sep = ""))[,-1]
+outTab <- rbind(outTab, temp)
+} else {
+missing <- c(missing, runInd)
+}
+}
+# #
+# # #
+resTab <- aggregate(cbind(size, cover, ancest, time) ~ testFunc + distro + m + basis + funcType, dat = outTab, FUN = mean)
+resTab$size <- resTab$size / factorial(6)
+resTab$cover <- round(resTab$cover, 3)
+resTab$size <- round(resTab$size, 2)
+missing
+resTab
+resTab[which(resTab$funcType = "GP"), ]
+resTab[which(resTab$funcType == "GP"), ]
+resTab[which(resTab$funcType == "poly"), ]
+resTab[which(resTab$funcType == "poly" * resTab$basis == "poly"), ]
+resTab[which(resTab$funcType == "poly" & resTab$basis == "poly"), ]
+n <- 200
+X <- rnorm(n)
+Y <- .5 * X + rnorm(n)
+n <- 200
+X <- rnorm(n)
+Y <- .5 * X + rnorm(n)
+plot(X, Y)
+n <- 200
+X <- rnorm(n)
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+n <- 200
+X <- rnorm(n)
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+n <- 200
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+mod1 <- lm(Y~X)
+abline()
+n <- 200
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+mod1 <- lm(Y~X)
+abline()
+n <- 200
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+mod1 <- lm(Y~X)
+abline()
+n <- 200
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+mod1 <- lm(Y~X)
+abline()
+n <- 500
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+mod1 <- lm(Y~X)
+abline()
+n <- 500
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+mod1 <- lm(Y~X)
+abline(a = mod1$coef[1], b = mod1$coef[2], col = "red")
+n <- 500
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+mod1 <- lm(Y~X)
+abline(a = mod1$coef[1], b = mod1$coef[2], col = "red")
+set.seed(200)
+n <- 500
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+mod1 <- lm(Y~X)
+abline(a = mod1$coef[1], b = mod1$coef[2], col = "red")
+set.seed(200)
+n <- 500
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+mod1 <- lm(Y~X)
+abline(a = mod1$coef[1], b = mod1$coef[2], col = "red")
+set.seed(201)
+n <- 500
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+mod1 <- lm(Y~X)
+abline(a = mod1$coef[1], b = mod1$coef[2], col = "red")
+set.seed(201)
+n <- 500
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+mod1 <- lm(Y~X)
+mod2 <- lm(X~Y)
+abline(a = mod1$coef[1], b = mod1$coef[2], col = "red")
+set.seed(201)
+n <- 500
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+mod1 <- lm(Y~X)
+mod2 <- lm(X~Y)
+abline(a = mod1$coef[1], b = mod1$coef[2], col = "red")
+abline(a = -mod2$coef[1]/mod2$coef[2], b = 1/mod2$coef[2], col = "orange")
+set.seed(201)
+n <- 500
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+mod1 <- lm(Y~X)
+mod2 <- lm(X~Y)
+abline(a = mod1$coef[1], b = mod1$coef[2], col = "red", lwd = 2)
+abline(a = -mod2$coef[1]/mod2$coef[2], b = 1/mod2$coef[2], col = "orange", lwd = 2)
+set.seed(201)
+n <- 100
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+mod1 <- lm(Y~X)
+mod2 <- lm(X~Y)
+abline(a = mod1$coef[1], b = mod1$coef[2], col = "red", lwd = 2)
+abline(a = -mod2$coef[1]/mod2$coef[2], b = 1/mod2$coef[2], col = "orange", lwd = 2)
+set.seed(201)
+n <- 100
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+mod1 <- lm(Y~X)
+mod2 <- lm(X~Y)
+abline(a = mod1$coef[1], b = mod1$coef[2], col = "red", lwd = 2)
+abline(a = -mod2$coef[1]/mod2$coef[2], b = 1/mod2$coef[2], col = "orange", lwd = 2)
+set.seed(201)
+n <- 100
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+plot(X, Y)
+mod1 <- lm(Y~X)
+mod2 <- lm(X~Y)
+abline(a = mod1$coef[1], b = mod1$coef[2], col = "red", lwd = 2)
+abline(a = -mod2$coef[1]/mod2$coef[2], b = 1/mod2$coef[2], col = "orange", lwd = 2)
+set.seed(201)
+n <- 100
+X <- sort(rnorm(n))
+Y <- .5 * X + rnorm(n, sd = .5)
+setEPS()
+png("~/Dropbox/Apps/Overleaf/BTRY6020_SP24/lectures/L1-slr/lec2/flipped.png", width = 800, height = 500)
+plot(X, Y)
+mod1 <- lm(Y~X)
+mod2 <- lm(X~Y)
+abline(a = mod1$coef[1], b = mod1$coef[2], col = "red", lwd = 2)
+abline(a = -mod2$coef[1]/mod2$coef[2], b = 1/mod2$coef[2], col = "orange", lwd = 2)
+dev.off()
+knitr::opts_chunk$set(echo = TRUE)
+snow_data <-
+read.csv("https://raw.githubusercontent.com/ysamwang/btry6020_sp22/main/lectureData/snow_data.csv")
+names(snow_data)
+plot(snow_data$nino, snow_data$prec)
+pairs(snow_data)
+plot(snow_data$snow, snow_data$nino)
+which(snow_data$nino < -.5 & snow_data$snow < 250)
+snow_data[which(snow_data$nino < -.5 & snow_data$snow < 250), ]
+snow_data
+yearId <- 1920
+plot(snow_data$snow, snow_data$nino)
+point(snow_data$snow[which(snow_data$year == yearId)], snow_data$nino[which(snow_data$year == yearId)], col = "red")
+yearId <- 1920
+plot(snow_data$snow, snow_data$nino)
+point(snow_data$snow[which(snow_data$year == yearId)], snow_data$nino[which(snow_data$year == yearId)], color = "red")
+yearId <- 1920
+plot(snow_data$snow, snow_data$nino)
+points(snow_data$snow[which(snow_data$year == yearId)], snow_data$nino[which(snow_data$year == yearId)], color = "red")
+yearId <- 1920
+plot(snow_data$snow, snow_data$nino)
+points(snow_data$snow[which(snow_data$year == yearId)], snow_data$nino[which(snow_data$year == yearId)], col = "red")
+yearId <- 1920
+plot(snow_data$snow, snow_data$nino)
+points(snow_data$snow[which(snow_data$year == yearId)], snow_data$nino[which(snow_data$year == yearId)], col = "red", pch = 19)
+yearId <- 1920 ### Change this value to be the year of the point you identify
+plot(snow_data$snow, snow_data$nino)
+points(snow_data$snow[which(snow_data$year == yearId)], snow_data$nino[which(snow_data$year == yearId)], col = "red", pch = 19)
+text(snow_data$snow, snow_data$nino)
+plot(snow_data$snow, snow_data$nino, pch = NA)
+?text
+plot(snow_data$snow, snow_data$nino, pch = NA)
+text(snow_data$snow, snow_data$nino, labels = snow_data$year)
+plot(snow_data$snow, snow_data$nino, pch = NA)
+text(snow_data$snow, snow_data$nino, labels = snow_data$year, cex = .5)
+plot(snow_data$snow, snow_data$nino, pch = NA)
+text(snow_data$snow, snow_data$nino, labels = snow_data$year, cex = .8)
+plot(snow_data$snow, snow_data$nino, pch = 1)
+text(snow_data$snow, snow_data$nino, labels = snow_data$year, cex = .8)
+plot(snow_data$snow, snow_data$nino, pch = 1, cex = .8)
+text(snow_data$snow, snow_data$nino, labels = snow_data$year, cex = .8)
+plot(snow_data$snow, snow_data$nino, pch = 1, cex = .8)
+text(snow_data$snow, snow_data$nino, labels = snow_data$year, cex = .8, adj = 1)
+plot(snow_data$snow, snow_data$nino, pch = 1, cex = .8)
+text(snow_data$snow, snow_data$nino, labels = snow_data$year, cex = .8, adj = 2)
+plot(snow_data$snow, snow_data$nino, pch = 1, cex = .8)
+text(snow_data$snow, snow_data$nino, labels = snow_data$year, cex = .8, adj = 3)
+plot(snow_data$snow, snow_data$nino, pch = 1, cex = .8)
+text(snow_data$snow, snow_data$nino, labels = snow_data$year, cex = .8, adj = 4)
+plot(snow_data$snow, snow_data$nino, pch = 1, cex = .8)
+text(snow_data$snow, snow_data$nino, labels = snow_data$year, cex = .8, adj = 1)
+plot(snow_data$snow, snow_data$nino, pch = 1, cex = .8)
+text(snow_data$snow, snow_data$nino, labels = snow_data$year, cex = .8, pos = 1)
+plot(snow_data$snow, snow_data$nino, pch = 1, cex = .8)
+text(snow_data$snow, snow_data$nino, labels = snow_data$year %%100, cex = .8, pos = 1)
+plot(snow_data$snow, snow_data$nino, pch = 1, cex = .8)
+text(snow_data$snow, snow_data$nino, labels = sprintf('%02d', snow_data$year %% 100), cex = .8, pos = 1)
+plot(snow_data$snow, snow_data$nino, pch = NA)
+text(snow_data$snow, snow_data$nino, labels = sprintf('%02d', snow_data$year %% 100), cex = .8)
+plot(snow_data$snow, snow_data$nino, pch = NA)
+text(snow_data$snow, snow_data$nino, labels = snow_data$year, cex = .8, pos = 1)
+plot(snow_data$snow, snow_data$nino, pch = NA)
+text(snow_data$snow, snow_data$nino, labels = snow_data$year, cex = .8)
+install.packages("packageRank")
+plot(packageRank::packageRank(packages = "mixedMem"))
+?packageRank::packageRank
+cranDownloads(packages = "mixedMem")
+packageRank::cranDownloads(packages = "mixedMem")
+sample.size <- 300
+rep.runs <- 15
+n.list <- c(2000)
+d.list <- c("gauss", "unif", "laplace", "gamma")
+func.list <- c("poly", "fourier", "GP")
+basis.list <- c("poly", "bspline")
+param.grid <- expand.grid(rep(n.list, sample.size / rep.runs), d.list, func.list, basis.list)
+#
+#
+#
+#
+#
+#
+runInd <- 1
+outTab <- read.csv(paste("~/Dropbox/confSetGraphs/code/rPkg/simResults/nl/nl_exp_",runInd, ".csv", sep = ""))[,-1]
+missing <- c()
+for(runInd in 2:nrow(param.grid)){
+if(file.exists(paste("~/Dropbox/confSetGraphs/code/rPkg/simResults/nl/nl_exp_",runInd, ".csv", sep = ""))){
+temp <- read.csv(paste("~/Dropbox/confSetGraphs/code/rPkg/simResults/nl/nl_exp_",runInd, ".csv", sep = ""))[,-1]
+outTab <- rbind(outTab, temp)
+} else {
+missing <- c(missing, runInd)
+}
+}
+# #
+# # #
+resTab <- aggregate(cbind(size, cover, ancest, time) ~ testFunc + distro + m + basis + funcType, dat = outTab, FUN = mean)
+resTab$size <- resTab$size / factorial(6)
+resTab$cover <- round(resTab$cover, 3)
+resTab$size <- round(resTab$size, 2)
+missing
+resTab
+resTab <- aggregate(cbind(size, cover, ancest, time) ~ testFunc + distro + m + basis + funcType, dat = outTab, FUN = mean)
+resTab$size <- resTab$size / factorial(6)
+resTab$cover <- round(resTab$cover, 3)
+resTab$size <- round(resTab$size, 2)
+resTab
+resTab[which(resTab$cover > .7), ]

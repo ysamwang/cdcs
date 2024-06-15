@@ -1,0 +1,26 @@
+{
+    "id": "F324DB4F",
+    "path": "~/Dropbox/confSetGraphs/code/rPkg/data_analysis/post_process.R",
+    "project_path": null,
+    "type": "r_source",
+    "hash": "547928092",
+    "contents": "",
+    "dirty": false,
+    "created": 1718196824244.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "115,25",
+        "scrollLine": "104"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1718199557,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1718199557296,
+    "read_only": false,
+    "read_only_alternatives": []
+}

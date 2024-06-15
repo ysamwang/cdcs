@@ -1,0 +1,24 @@
+{
+    "id": "1FE22B12",
+    "path": "~/Dropbox/confSetGraphs/code/rPkg/cdcs/test/paper_plots/analysis.R",
+    "project_path": "test/paper_plots/analysis.R",
+    "type": "r_source",
+    "hash": "1031497205",
+    "contents": "",
+    "dirty": false,
+    "created": 1616782842824.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "cursorPosition": "357,0",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1608753143,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1608753143,
+    "read_only": false,
+    "read_only_alternatives": []
+}

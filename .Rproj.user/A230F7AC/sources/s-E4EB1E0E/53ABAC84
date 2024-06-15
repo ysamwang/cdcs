@@ -1,0 +1,26 @@
+{
+    "id": "53ABAC84",
+    "path": "~/Dropbox/confSetGraphs/code/rPkg/cdcs/R/rDAG.R",
+    "project_path": "R/rDAG.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1660397351799.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "93,27",
+        "scrollLine": "74"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1660397784,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1660397784826,
+    "read_only": false,
+    "read_only_alternatives": []
+}
