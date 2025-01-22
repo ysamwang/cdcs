@@ -29,6 +29,12 @@ senSen2014(
 }}
 
 \item{K}{degree of moment for moment based statistic}
+
+\item{cutoff}{parameter which trims the test function}
+
+\item{sampleSplit}{the sample using the second half to estimate beta and first half to run independence test}
+
+\item{kernel}{kernel for calculatin hsic}
 }
 \value{
 a p-value testing the hypothesis

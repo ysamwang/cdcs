@@ -20,7 +20,7 @@ brandAndBound_anm(
 \arguments{
 \item{Y}{an n by p matrix with the observations}
 
-\item{G}{a 3d array containing the evaluated test functions. G[i, j, u] is h_j(Y_{u,i})}
+\item{G}{a 3d array containing the evaluated test functions. G[i, j, u] is \eqn{h_j(Y_{u,i})}}
 
 \item{bs}{the number of bootstrap resamples for the null distribution}
 
@@ -38,6 +38,8 @@ brandAndBound_anm(
 \item "tippet": \eqn{T = \min p_{\theta(v)})} which follows a Beta(1, p-1) distribution
 \item "fisher": \eqn{T = -2 \sum_{\theta(v) > 1} \log( p_{\theta(v)})} which follows a chi-squared with p-1 degrees of freedom
 }}
+
+\item{intercept}{whether or not to add an intercept in the basis}
 
 \item{verbose}{T or F. Indicates whether to print updates to console}
 

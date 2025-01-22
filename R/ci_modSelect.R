@@ -5,14 +5,15 @@
 #' causal effect which accounts for model uncertainty
 #'
 #' @param tab a matrix with p columns (corresponding to variables) and each row is an ordering
-#' @param treatment index of treatment of interest
-#' @param outcome index of outcome of interest
+#' @param treat index of treatment of interest
+#' @param outc index of outcome of interest
 #' @param effectType either 'total' or 'direct'
 #' @param alpha the confidence level (conditional on the selected graph) 
-#' 
+#' @param Y the n x p data
 #' @return
 #' ci is the interval
 #' length is the length
+#' @export
 ci_modSelect <- function(tab, treat, outc, effectType = "total", alpha = .05, Y){
   
   ## Checks if first column of tab is p-values or not
@@ -29,7 +30,7 @@ ci_modSelect <- function(tab, treat, outc, effectType = "total", alpha = .05, Y)
   if(nrow(tab) > 0){
     
     # rows in tab where treatment preceeds the outcome
-    ind <- apply(tab, MAR = 1, function(x){which(x == treat) < which(x == outc)})
+    ind <- apply(tab, MARGIN = 1, function(x){which(x == treat) < which(x == outc)})
     
     if(sum(ind) > 0){
       
@@ -37,14 +38,14 @@ ci_modSelect <- function(tab, treat, outc, effectType = "total", alpha = .05, Y)
         
         ## Extra processing to force the object into a list 
         adj_Set <- unique(lapply(
-          apply(tab[which(ind), , drop = F], MAR = 1, function(x){list(unname(sort(x[1:which(x == treat)])))})
+          apply(tab[which(ind), , drop = F], MARGIN = 1, function(x){list(unname(sort(x[1:which(x == treat)])))})
                                  , "[[", 1))
         
       } else if(effectType == "direct"){
         
         ## Extra processing to force the object into a list
         adj_Set <- unique(lapply(
-          apply(tab[which(ind), , drop = F], MAR = 1, function(x){list(unname(sort(x[1:(which(x == outc) - 1)])))})
+          apply(tab[which(ind), , drop = F], MARGIN = 1, function(x){list(unname(sort(x[1:(which(x == outc) - 1)])))})
           ,"[[", 1))
         
         

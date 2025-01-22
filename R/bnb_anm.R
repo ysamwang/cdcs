@@ -5,7 +5,7 @@
 #' Assumes an additive noise model where the basis is either bsplines or polynomial
 #'
 #' @param Y an n by p matrix with the observations
-#' @param G a 3d array containing the evaluated test functions. G[i, j, u] is h_j(Y_{u,i})
+#' @param G a 3d array containing the evaluated test functions. G[i, j, u] is \eqn{h_j(Y_{u,i})}
 #' @param bs the number of bootstrap resamples for the null distribution
 #' @param aggType the aggregation used for the test statistic
 #' #' \itemize{
@@ -22,9 +22,10 @@
 #' @param verbose T or F. Indicates whether to print updates to console  
 #' @param basis the basis used to model f_v. Choices are "bspline" or "poly"
 #' @param K either the df for bsplines or the number of polynomial terms
+#' @param intercept whether or not to add an intercept in the basis
 #' @return
 #' a vector of p-values corresponding to test 
-#' 
+#' @export
 brandAndBound_anm <- function(Y, G, bs = 200,
                           aggType = 3, alpha = .05,
                           pValueAgg = "tippett", intercept = 1,
@@ -192,7 +193,7 @@ brandAndBound_anm <- function(Y, G, bs = 200,
     
     # hash involves all sequences which are the same set
     # computation only depends on v and set an(v), so the "ordering" of an(v)  doesn't matter
-    hash <- apply(currentSeq[, -1, drop = F], MAR = 1, function(x){paste(sort(unlist(x)), collapse = ".")})
+    hash <- apply(currentSeq[, -1, drop = F], MARGIN = 1, function(x){paste(sort(unlist(x)), collapse = ".")})
     
     # uniqueHash is the list of unique ancestral sets
     uniqueHash <- unique(hash)
@@ -212,7 +213,7 @@ brandAndBound_anm <- function(Y, G, bs = 200,
     
     
     # For each value in uniqueHash, get a representative set and run .testAncest on that set
-    uniqueRes <- apply(currentSeq[match(uniqueHash, hash), -1, drop = F], MAR = 1, .testAncest)
+    uniqueRes <- apply(currentSeq[match(uniqueHash, hash), -1, drop = F], MARGIN = 1, .testAncest)
     
     ### Update Sequences ###
     updatedSeq <- lapply(1:length(hash), .updatePvals)

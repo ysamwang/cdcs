@@ -27,9 +27,9 @@ rDAG_anm(
 
 \item{parent_prob}{the probability of an edge between any two nodes}
 
-\item{lowScale}{lower bound on variance of error terms}
+\item{lowScale}{lower bound on sd of error terms}
 
-\item{highScale}{upper bound on variance of error terms}
+\item{highScale}{upper bound on sd of error terms}
 
 \item{dist}{the distribution of the error terms. Choices are: "gauss", "unif", "lognorm", "gamma", "weibull", "laplace", "mixed"}
 
@@ -37,10 +37,25 @@ rDAG_anm(
 
 \item{AdjMat}{an adjacency matrix which can be passed in to specify the edges instead of randomly selecting a graph}
 
-\item{funcType:}{Either "GP", "poly" "fourier", "cam", or "tanh"#' @param highScale upper bound on variance of error terms}
+\item{funcType}{Either "GP", "poly" "fourier", "cam", or "tanh"
+\itemize{
+\item GP: sample from a gaussian process with parameters sigma and h
+\item poly: sample from a random polynomial where the scores for the hermite polynomials have sd 1/k! 
+\item fourier: sample from random fourier function where scores are 1/M^4
+\item cam: function from Buhlmann et al 2013
+\item tanh: tanh function
+}}
+
+\item{h}{bandwidth parameter if generating functions from Gaussian process "GP"}
+
+\item{sigma}{parameter if generating functions from Gaussian process "GP"}
+
+\item{M}{paramter}
+
+\item{noParentMult}{multiplier for sd of errors if a node has no parent (i.e., is a root note)}
 }
 \value{
-#' \itemize{
+\itemize{
 \item B the p x p adjacency matrix
 \item Y the n x p data
 \item errs the error realizations

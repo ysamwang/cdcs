@@ -18,7 +18,7 @@ brandAndBound(
 \arguments{
 \item{Y}{an n by p matrix with the observations}
 
-\item{G}{a 3d array containing the evaluated test functions. G[i, j, u] is h_j(Y_{u,i})}
+\item{G}{a 3d array containing the evaluated test functions. G[i, j, u] is \eqn{h_j(Y_{u,i})}}
 
 \item{bs}{the number of bootstrap resamples for the null distribution}
 
@@ -28,6 +28,8 @@ brandAndBound(
 \item "2" \eqn{\sum_{u \prec pr(v), j} \vert h_j(Y_u)^T \eta_v \vert^2}
 \item "3" or "inf": \eqn{\max_{u \prec pr(v), j} \vert h_j(Y_u)^T \eta_v \vert} 
 }}
+
+\item{alpha}{the size of the test}
 
 \item{pValueAgg}{the procedure for aggregating p-values 
 #' \itemize{

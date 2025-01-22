@@ -11,7 +11,7 @@
 #' @param dist the distribution of the error terms. Choices are: "gauss", "unif", "lognorm", "gamma", "weibull", "laplace", "mixed"
 #' @param uniqueTop Whether to enforce a unique topological ordering so that u -> u+1 for all u
 #' @param AdjMat an adjacency matrix which can be passed in to specify the edges instead of randomly selecting a graph
-#' @param funcType: Either "GP", "poly" "fourier", "cam", or "tanh"
+#' @param funcType Either "GP", "poly" "fourier", "cam", or "tanh"
 #' \itemize{
 #' \item GP: sample from a gaussian process with parameters sigma and h
 #' \item poly: sample from a random polynomial where the scores for the hermite polynomials have sd 1/k! 
@@ -30,6 +30,7 @@
 #' \item errs the error realizations
 #' \item scales the variance of the errors
 #' } 
+#' @export
 #' 
 rDAG_anm <- function(p, n, parent_prob = 1/3, lowScale = 1/5, highScale = sqrt(2)/5,
                      dist = "gauss", uniqueTop = T, AdjMat = NULL, funcType = "GP", 
@@ -53,7 +54,7 @@ rDAG_anm <- function(p, n, parent_prob = 1/3, lowScale = 1/5, highScale = sqrt(2
     
   }
   
-  noParents <- apply(AdjMat, MAR = 1, sum) == 0
+  noParents <- apply(AdjMat, MARGIN = 1, sum) == 0
   potentialScales <- runif(p, lowScale, highScale)
   scales <- ifelse(noParents, potentialScales * noParentMult, potentialScales)
   

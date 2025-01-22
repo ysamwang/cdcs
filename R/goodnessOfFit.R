@@ -13,9 +13,12 @@
 #' \item "dcor": uses distance correlation 
 #' }
 #' @param K degree of moment for moment based statistic
-#' @sampleSplit Split the sample using the second half to estimate beta and first half to run independence test
+#' @param cutoff parameter which trims the test function
+#' @param kernel kernel for calculatin hsic
+#' @param  sampleSplit the sample using the second half to estimate beta and first half to run independence test
 #' @return
 #' a p-value testing the hypothesis 
+#' @export
 senSen2014 <- function(X, Y, bs = 200, statType = "hsic", K = c(2,3), cutoff = NULL,
                        sampleSplit = F, kernel = "gaussian"){
 
@@ -116,104 +119,7 @@ senSen2014 <- function(X, Y, bs = 200, statType = "hsic", K = c(2,3), cutoff = N
 }
 
 
-#' Confidence sets for Causal Discovery
-#'
-#'
-#' Goodness of fit test
-#'
-#' @param Y an n vector with the observed outcome variables
-#' @param X an n by p matrix with the covariates
-#' @param bs the number of bootstrap resamples for the null distribution
-#' @param statType 
-#' #' \itemize{
-#' \item "hsic": uses dHSIC
-#' \item "moment": uses moment based statistic with degree K
-#' \item "dcor": uses distance correlation 
-#' }
-#' @param K degree of moment for moment based statistic
-#' @sampleSplit Split the sample using the second half to estimate beta and first half to run independence test
-#' @return
-#' a p-value testing the hypothesis 
-dkw2020 <- function(X, Y, bs = 200, statType = "moment", K = c(2, 3),
-                    withinAgg = 3, sampleSplit = F, kernel = "gaussian", cutoff = NULL){
-  
-  
 
-  n <- dim(X)[1]
-  #if(sd(X[,1]) >1e-8){X <- cbind(rep(1, n), X) }
-  p <- dim(X)[2]
-  if(is.null(cutoff)){cutoff <- log(n) * 3}
-
-  
-  if(statType == "moment"){
-    
-    G <- array(0, dim = c(n, length(K), p))
-    for(k in 1:length(K)){
-      G[, k, ] <- sign(X^K[k]) * pmin(abs(X^K[k]), cutoff)
-    }
-    
-    out <- gofTest(covariates = X, Y = Y,
-            G = G, bs = bs, withinAgg = withinAgg, intercept = 0,
-            sampleSplit = sampleSplit)
-    
-    return(c(
-      (sum(out$nullDistOne > out$testStatOne) + 1)/ (bs + 1),
-      (sum(out$nullDistTwo > out$testStatTwo) + 1)/ (bs + 1),
-             (sum(out$nullDistTwo > out$testStatTwo) +1 ) / (bs + 1)
-             )
-    )
-    
-  } else {
-    
-    
-    
-    if(sampleSplit){
-      ### If sample splitting ###
-      n <- floor(n/2)
-      betaHat <- RcppArmadillo::fastLm(X = X[(n+1):nrow(X), ], y = Y)
-      X <- X[1:n, ]
-      Y <- Y[1:n, ]
-      hatMat <- diag(n) - X %*% solve(t(X) %*% X, t(X))
-      errs <- Y - X %*% betaHat
-      
-      
-    } else{
-
-      hatMat <- diag(n) - X %*% solve(t(X) %*% X, t(X))
-      errs <- hatMat %*% Y
-      
-    } 
-    
-    if(statType == "hsic"){
-      testStat <- n * dHSIC::dhsic(X, errs, kernel = kernel)$dHSIC
-    } else if (statType == "dcor"){
-      testStat <- n * energy::dcor(X, errs)
-    }
-
-    
-    
-    errs <- errs - mean(errs)
-    
-    .drawBS <- function(){
-      err.BS <- hatMat %*% sample(errs, replace = T)
-      
-      if(statType == "hsic"){
-        testStatBS <- n * dHSIC::dhsic(X, err.BS, kernel = kernel)$dHSIC
-      } else if (statType == "dcor"){
-        testStatBS <- n * energy::dcor(X, err.BS)
-      }
-      
-
-      
-      return(testStatBS)
-    }  
-    
-    nullDist <- replicate(bs, .drawBS())  
-    return((sum(nullDist >= testStat) + 1) / (bs + 1)) 
-  }
-  
-  
-}
 
   
   
@@ -231,9 +137,9 @@ senSenWrapper <- function(x, X, y,Boots = 200){
 
 
 
-
+# Code from Sen and Sen 2014
 TestIndBoots <- function(x,X,e,b,hx,hy,Boots = 100){
-  
+  n <- nrow(X)
   T_hat <- HSIC(x,e,2*hx*hx,2*hy*hy);   ## Compute the test-statistic
   # plot(T_hat,0,cex = 1.0, col = "dark red");
   # Implementing the bootstrap procedure
@@ -265,7 +171,7 @@ TestIndBoots <- function(x,X,e,b,hx,hy,Boots = 100){
   
 }
 
-
+# Code from Sen and Sen 2014
 HSIC <- function(X,Y,hx,hy){
   
   n <- length(Y); 

@@ -1,27 +1,22 @@
 #include <RcppArmadillo.h>
-
-/*
- * Helper for R function 'branchAndBound'
- * Takes in a set of ancestors and set of children to test
- * 
- * Inputs:
- * ancest: indices of ancestors
- * children: indices of possible children (of the ancestors)
- * dat: n x p matrix of data where v column is Y_v
- * G: an n x k p array of where each variable (corresponding to slice)
- *    has k test functions 
- * withinAgg: indicates which norm to take when combining test statistics within
- *    a variable but across test functions
- * aggType: indicates which norm to take when combining test statistics
- *    across variables
- * bs: number of bootstrap draws
- * intercept: should an additional intercept be included?
- * 
- * Returns:
- * pval: p-value for each child in children
- */
-
 //[[Rcpp::depends(RcppArmadillo)]]
+
+//' bnbHelperGof
+//' 
+//' This function is a helper for the branchAndBound function
+//'
+//' @param ancest indices of ancestor in the dat matrix
+//' @param children indices of children in the dat matrix
+//' @param dat n x p matrix with observations
+//' @param G an n x k x |ancest| array of where each variable (corresponding to slice) has k test functions 
+//' @param  withinAgg indicates which norm to take when combining test statistics within
+//'    a variable but across test functions
+//' @param aggType indicates which norm to take when combining test statistics across variables
+//' @param bs number of bootstrap draws
+//' @param intercept should an additional intercept be included?
+//' @return 
+//' pval: p-value for each child in children
+//' @export
 //[[Rcpp::export]]
 Rcpp::List bnbHelperGof(const arma::uvec ancest, const arma::uvec children, const arma::mat & dat,
                           const arma::cube & G, int withinAgg, int aggType,  int bs, int intercept) {

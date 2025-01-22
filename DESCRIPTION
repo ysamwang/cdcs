@@ -5,8 +5,10 @@ Version: 1.02
 Date: 2024-04-17
 Author: Y. Samuel Wang
 Maintainer: Y. Samuel Wang <ysw7@cornell.edu>
-Description: software for computing confidence Sets for Causal Discovery
-License: MIT License
-Imports: Rcpp (>= 1.0.3), pcalg, dHSIC, mgcv, abind, dHSIC
+Encoding: UTF-8
+Description: This package contains code for the paper 'Confidence Sets for Causal Orderings' by Wang, Kolar and Drton.
+License: MIT + file LICENSE
+Imports: stats, utils
+Depends: pcalg, dHSIC, mgcv, abind, rmutil, IndepTest, RPtests, intervals, RcppArmadillo, data.table, energy, mvtnorm
 LinkingTo: Rcpp, RcppArmadillo
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2

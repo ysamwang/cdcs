@@ -11,7 +11,6 @@
 #' @param intercept draw random intercept or leave mean 0
 #' @param dist the distribution of the error terms. Choices are: "gauss", "unif", "lognorm", "gamma", "weibull", "laplace", "mixed"
 #' @param uniqueTop Whether to enforce a unique topological ordering so that u -> u+1 for all u
-#' @param AdjMat an adjacency matrix which can be passed in to specify the edges instead of randomly selecting a graph
 #' @param BInput a matrix of edges which can be passed in instead of randomly drawing edges
 #' @param scalesInput a vector of error variances which can be passed in instead of randomly drawing
 #' @param intInput a vector of intercepts which can be passed in instead of randomly drawing
@@ -24,6 +23,7 @@
 #' \item scales the variance of the errors
 #' \item mu the intercept terms
 #' }
+#' @export
 #' 
 rDAG <- function(p, n, parent_prob = 1/3, 
                  lowScale = 1, highScale = 1,

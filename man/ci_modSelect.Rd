@@ -9,13 +9,15 @@ ci_modSelect(tab, treat, outc, effectType = "total", alpha = 0.05, Y)
 \arguments{
 \item{tab}{a matrix with p columns (corresponding to variables) and each row is an ordering}
 
+\item{treat}{index of treatment of interest}
+
+\item{outc}{index of outcome of interest}
+
 \item{effectType}{either 'total' or 'direct'}
 
 \item{alpha}{the confidence level (conditional on the selected graph)}
 
-\item{treatment}{index of treatment of interest}
-
-\item{outcome}{index of outcome of interest}
+\item{Y}{the n x p data}
 }
 \value{
 ci is the interval

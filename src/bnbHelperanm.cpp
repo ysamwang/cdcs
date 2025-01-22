@@ -1,25 +1,20 @@
 #include <RcppArmadillo.h>
-/*
- * Helper for R function 'branchAndBound'
- * Takes in a set of ancestors and set of children to test
- * 
- * Inputs:
- * ancest: matrix of ancestor basis functions
- * children: matrix of observed children
- * G: an n x k x |ancest| array of where each variable (corresponding to slice)
- *    has k test functions 
- * withinAgg: indicates which norm to take when combining test statistics within
- *    a variable but across test functions
- * aggType: indicates which norm to take when combining test statistics
- *    across variables
- * bs: number of bootstrap draws
- * intercept: should an additional intercept be included?
- * 
- * Returns:
- * pval: p-value for each child in children
- */
-
 //[[Rcpp::depends(RcppArmadillo)]]
+
+//' bnbHelperanm
+//' 
+//' This function is a helper for the branchAndBound_anm function
+//' @param ancest matrix of ancestor basis functions
+//' @param children matrix of observed children
+//' @param G an n x k x |ancest| array of where each variable (corresponding to slice) has k test functions 
+//' @param  withinAgg indicates which norm to take when combining test statistics within
+//'    a variable but across test functions
+//' @param aggType indicates which norm to take when combining test statistics across variables
+//' @param bs number of bootstrap draws
+//' @param intercept should an additional intercept be included?
+//' @return 
+//' pval: p-value for each child in children
+//' @export
 //[[Rcpp::export]]
 Rcpp::List bnbHelperanm(const arma::mat ancest, const arma::mat children,
                           const arma::cube & G, int withinAgg, int aggType, int bs, int intercept) {

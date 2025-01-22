@@ -52,8 +52,6 @@ rDAG(
 \item{intInput}{a vector of intercepts which can be passed in instead of randomly drawing}
 
 \item{posAndNeg}{whether edges should be both positive and negative or only positive}
-
-\item{AdjMat}{an adjacency matrix which can be passed in to specify the edges instead of randomly selecting a graph}
 }
 \value{
 #' \itemize{

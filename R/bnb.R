@@ -4,7 +4,7 @@
 #' Branch and bound for an exhaustive search
 #'
 #' @param Y an n by p matrix with the observations
-#' @param G a 3d array containing the evaluated test functions. G[i, j, u] is h_j(Y_{u,i}) 
+#' @param G a 3d array containing the evaluated test functions. G[i, j, u] is \eqn{h_j(Y_{u,i})} 
 #' @param bs the number of bootstrap resamples for the null distribution
 #' @param aggType the aggregation used for the test statistic
 #' #' \itemize{
@@ -18,9 +18,11 @@
 #' \item "fisher": \eqn{T = -2 \sum_{\theta(v) > 1} \log( p_{\theta(v)})} which follows a chi-squared with p-1 degrees of freedom
 #' }
 #' @param intercept 1 indicates that an intercept should be used; 0 indicates no intercept is used
-#' @param verbose T or F. Indicates whether to print updates to console  
+#' @param verbose T or F. Indicates whether to print updates to console
+#' @param alpha the size of the test
 #' @return
 #' a vector of p-values corresponding to test 
+#' @export
 brandAndBound <- function(Y, G, bs = 200,
                           aggType = 3, alpha = .05,
                           pValueAgg = "tippett", intercept = 1, verbose = T){
@@ -157,7 +159,7 @@ brandAndBound <- function(Y, G, bs = 200,
     
     # hash involves all sequences which are the same set
     # computation only depends on v and set an(v), so the "ordering" of an(v)  doesn't matter
-    hash <- apply(currentSeq[, -1, drop = F], MAR = 1, function(x){paste(sort(unlist(x)), collapse = ".")})
+    hash <- apply(currentSeq[, -1, drop = F], MARGIN = 1, function(x){paste(sort(unlist(x)), collapse = ".")})
     
     # uniqueHash is the list of unique ancestral sets
     uniqueHash <- unique(hash)
@@ -177,7 +179,7 @@ brandAndBound <- function(Y, G, bs = 200,
     
     
     # For each value in uniqueHash, get a representative set and run .testAncest on that set
-    uniqueRes <- apply(currentSeq[match(uniqueHash, hash), -1, drop = F], MAR = 1, .testAncest)
+    uniqueRes <- apply(currentSeq[match(uniqueHash, hash), -1, drop = F], MARGIN = 1, .testAncest)
     
     ### Update Sequences ###
     updatedSeq <- lapply(1:length(hash), .updatePvals)
