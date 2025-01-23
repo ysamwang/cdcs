@@ -1,3 +1,8 @@
+## Code from Higher-Order Least Squares: Assessing Partial Goodness of Fit of Linear Causal Models
+## by Schultheiss, Buhlmann, Yuan (2023)
+## from: https://github.com/cschultheiss/HOLS
+
+
 require(hdi)
 require(MASS)
 
