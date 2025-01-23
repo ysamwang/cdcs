@@ -18,7 +18,7 @@
 #' pval: p-value for each child in children
 #' @export
 bnbHelperGof <- function(ancest, children, dat, G, withinAgg, aggType, bs, intercept) {
-    .Call('_cdcs_bnbHelperGof', PACKAGE = 'cdcs', ancest, children, dat, G, withinAgg, aggType, bs, intercept)
+    .Call(`_cdcs_bnbHelperGof`, ancest, children, dat, G, withinAgg, aggType, bs, intercept)
 }
 
 #' bnbHelperanm
@@ -36,6 +36,6 @@ bnbHelperGof <- function(ancest, children, dat, G, withinAgg, aggType, bs, inter
 #' pval: p-value for each child in children
 #' @export
 bnbHelperanm <- function(ancest, children, G, withinAgg, aggType, bs, intercept) {
-    .Call('_cdcs_bnbHelperanm', PACKAGE = 'cdcs', ancest, children, G, withinAgg, aggType, bs, intercept)
+    .Call(`_cdcs_bnbHelperanm`, ancest, children, G, withinAgg, aggType, bs, intercept)
 }
 
