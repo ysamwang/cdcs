@@ -9,7 +9,12 @@
 This R package contains source code and replication files for the paper
 [Confidence Sets for Causal Orderings](https://arxiv.org/abs/2305.14506)
 by Wang, Kolar, and Drton. Specifically, the project seeks to quantify
-uncertainty for causal discovery tasks.
+uncertainty for causal discovery tasks. The primary task is to create a
+confidence set for causal orderings—a total ordering of the variables in
+which ancestors precede descendants. This set can be post-processed to
+form a lower/upper envelope of ancestral relations and confidence
+intervals for causal effects which incorporate uncertainty about the
+causal structure.
 
 ## Installation
 
