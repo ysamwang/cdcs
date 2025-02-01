@@ -37,7 +37,7 @@ The simulations provided in the paper are quite extensive and would require a hi
 * To replicate the simulations used to create Figure 2 use the script figure2_replication.R
 * To replicate the simulations used to create Table 2 use the script table3_replication.R
 * To replicate the simulations used to create Figure 3 use the script figure3_replication.R
-* To replicate the real data analysis use the script dataAnalysis_replication.R. The data is the 12 portfolio average weighted data for 2019-2023 from [Kenneth French's data library](https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/12_Industry_Portfolios_daily_CSV.zip) and is located in the data folder. It was accessed in Mar 2024. Note: this may take roughly 24 hrs to run on a personal computer.
+* To replicate the real data analysis use the script dataAnalysis_replication.R. The data is the 12 portfolio average value weighted data for 2019-2023 from [Kenneth French's data library](https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/12_Industry_Portfolios_daily_CSV.zip) and is located in the data folder. It was accessed in Mar 2024. Note: this may take roughly 24 hrs to run on a personal computer.
 * To replicate the simulations in the appendix use the script appendix_replication.R
 
 

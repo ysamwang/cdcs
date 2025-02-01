@@ -44,7 +44,7 @@ of replications can run on most personal machines.
 - To replicate the simulations used to create Figure 3 use the script
   figure3_replication.R
 - To replicate the real data analysis use the script
-  dataAnalysis_replication.R. The data is the 12 portfolio average
+  dataAnalysis_replication.R. The data is the 12 portfolio average value
   weighted data for 2019-2023 from [Kenneth French’s data
   library](https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/12_Industry_Portfolios_daily_CSV.zip)
   and is located in the data folder. It was accessed in Mar 2024. Note:

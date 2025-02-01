@@ -1,7 +1,7 @@
 ## Fama and French 12 industry data
 ## Accessed Mar 2024 from Kenneth French's data library 
 ## https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/12_Industry_Portfolios_daily_CSV.zip
-##
+## Using the average value weighted returns
 
 # load the data and subset to data from 2019-2023
 famaData <- read.csv("data/fama12_23.csv")

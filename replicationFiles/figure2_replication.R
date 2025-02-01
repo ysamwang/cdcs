@@ -1,4 +1,4 @@
-### Simulations shown in Figure 1 examining performance of the confidence set procedures
+### Simulations shown in Figure 2 examining performance of the confidence set procedures
 
 
 ## run.onceBnb is a helper function which takes in
@@ -68,7 +68,7 @@ run.onceBnb <- function(p, n, distro, bs = 400, parent_prob = 1/3, verbose = T){
 
 library(cdcs)
 
-## Settings used to create Figure 1
+## Settings used to create Figure 2
 # p <- 10
 # n.list <- c(500, 1000, 2500, 5000)
 # sample.size <- 400
@@ -107,7 +107,7 @@ for(runInd in 1:nrow(param.grid)){
 # ances: the proportion of all ancestal relations which are contained in the lower envelope
 # time: time in seconds required to compute the confidence set
 # pointEst: 1 if the point estimate from DirectLiNGAM is correct; 0 otherwise
-results <- data.frame(param.grid, out) %>% group_by( n, distr) %>%
+results <- data.frame(param.grid, out) %>% group_by(n, distr) %>%
   summarize(size = mean(size),
             cover = mean(cover),
             ancest = mean(ancest),
